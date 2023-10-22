@@ -8,3 +8,4 @@ _build
 .python-version
 venv/*
 postgres.ini
+streamsets.ini
