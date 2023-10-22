@@ -1,0 +1,10 @@
+*.pyc
+.DS_Store
+.cache
+_build
+.idea
+*.iml
+.gitreview
+.python-version
+venv/*
+postgres.ini
