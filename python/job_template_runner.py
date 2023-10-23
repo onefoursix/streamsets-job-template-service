@@ -12,18 +12,16 @@ def run_job_template(name):
         # Get StreamSets Manager
         streamsets_manager = StreamSetsManager()
 
-        # Run Job Template
-        streamsets_manager.run_job_template(job_template_config)
-
         # Start the Job Template
         job_template_instances = streamsets_manager.run_job_template(job_template_config)
 
-        # Wait for Job Template Instances to complete
-        streamsets_manager.wait_for_completion(job_template_instances)
+        # Get metrics when Job(s) complete
+        streamsets_manager.get_metrics(job_template_instances)
 
     except Exception as e:
         print('Error running Job Template' + str(e))
         raise
 
 
-run_job_template('files-to-gcp-prod-1')
+run_job_template('oracle-to-adls-prod-1')
+# run_job_template('files-to-gcp-prod-1')
