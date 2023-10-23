@@ -16,13 +16,13 @@ This project provides an example of how to use the [StreamSets Platform SDK](htt
 
 - Clone this project to your local machine
 
-- Create the PostgreSQL user, schema, and tables by executing the <code>sql/postgres.sql</code> script against your PostgresSQL database. This will create these two tables in the <code>streamsets</code> schema:
+- Create the PostgreSQL user, schema, and tables by executing the <code>sql/postgres.sql</code> script against your PostgresSQL database. This will create these two tables in a <code>streamsets</code> schema:
   - <code>job_template_config</code>
   
   - <code>job_metrics</code>
 
 
-- Create a file named <code>postgres.ini</code> at the root of your local project directory with the following entries, with values for the user and password just created:
+- Create a file named <code>postgres.ini</code> at the root of your local project directory with the following entries, with postgres connection properties, including the user and password just created:
 ```
 [postgresql]
 host=localhost
@@ -30,6 +30,14 @@ port=5432
 database=postgres
 user=streamsets
 password=streamsets
+```
+
+- Create a file named <code>streamsets.ini</code> at the root of your local project directory with the following entries:
+```
+[streamsets]
+cred_id=<your CRED ID>
+cred_token=<your CRED_TOKEN>
+
 ```
 
 - Create or select an existing parameterized pipeline and Job Template in Control Hub

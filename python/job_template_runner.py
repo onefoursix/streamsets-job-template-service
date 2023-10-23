@@ -14,11 +14,16 @@ def run_job_template(name):
 
         # Run Job Template
         streamsets_manager.run_job_template(job_template_config)
-        return 200
+
+        # Start the Job Template
+        job_template_instances = streamsets_manager.run_job_template(job_template_config)
+
+        # Wait for Job Template Instances to complete
+        streamsets_manager.wait_for_completion(job_template_instances)
 
     except Exception as e:
         print('Error running Job Template' + str(e))
-        return 500
+        raise
 
 
 run_job_template('files-to-gcp-prod-1')
