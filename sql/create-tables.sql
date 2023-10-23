@@ -14,3 +14,20 @@ create table streamsets.job_template_config(
   CONSTRAINT name_unique UNIQUE (name)
 )
 
+create table streamsets.job_run_metrics (
+  job_template_id           character varying    not null,
+  job_id                    character varying    not null,
+  run_number                bigint               not null,
+  successful_run            boolean              not null,
+  status                    character varying    not null,
+  input_count               bigint,
+  output_count              bigint,
+  error_count               bigint,
+  start_time                timestamp,
+  finsh_time                timestamp
+);
+
+grant all on streamsets.job_template_config to streamsets;
+
+grant all on streamsets.job_run_metrics to streamsets;
+

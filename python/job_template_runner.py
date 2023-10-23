@@ -1,4 +1,4 @@
-from job_template_config_manager import JobTemplateConfigManager
+from postgres_manager import PostgresManager
 from streamsets_manager import StreamSetsManager
 
 
@@ -6,8 +6,8 @@ def run_job_template(name):
 
     try:
         # Get Job Template Config from Postgres
-        config_manager = JobTemplateConfigManager()
-        job_template_config = config_manager.get_job_template_config(name)
+        postgres = PostgresManager()
+        job_template_config = postgres.get_job_template_config(name)
 
         # Get StreamSets Manager
         streamsets_manager = StreamSetsManager()

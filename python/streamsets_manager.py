@@ -2,6 +2,9 @@ from configparser import ConfigParser
 from streamsets.sdk import ControlHub
 from threading import Thread
 from time import time, sleep
+from datetime import datetime
+from postgres_manager import PostgresManager
+
 
 job_status_update_seconds = 10
 max_wait_time_for_job_seconds = 10 * 60  # ten minutes
@@ -40,20 +43,15 @@ class StreamSetsManager:
             attach_to_template=config['attach_to_template'],
             delete_after_completion=config['delete_after_completion'])
 
-
-
-
-
     # Get metrics for all Job Template Instances once they complete
     def get_metrics(self, job_template_instances):
         for job in job_template_instances:
             # Track each Job Template Instance in a separate thread to avoid blocking
-            thread = Thread(target=self.get_metrics_for_job, args=(job,))
+            thread = Thread(target=self.wait_for_job_completion_and_get_metrics, args=(job,))
             thread.start()
 
-        # Get metrics for a single Job Template Instance once it completes
-
-    def get_metrics_for_job(self, job):
+    # Waits for Job to complete before getting its metrics
+    def wait_for_job_completion_and_get_metrics(self, job):
         start_seconds = time()
         elapsed_seconds = 0
         while elapsed_seconds < max_wait_time_for_job_seconds:
@@ -63,23 +61,39 @@ class StreamSetsManager:
                 break
             sleep(job_status_update_seconds)
         if job.status.status == 'INACTIVE':
-            self.get_metrics_for_completed_job(job)
+            self.write_metrics_for_completed_job(job)
         else:
             self.handle_failed_job(job)
+
     @staticmethod
-    def get_metrics_for_completed_job(job):
+    def write_metrics_for_completed_job(job):
         job.refresh()
-        metrics = job.metrics
-        for metric in metrics:
-            print('----------')
-            print('Run Number: ' + str(metric.run_count))
-            print('Input Count: ' + str(metric.input_count))
-            print('Output Count: ' + str(metric.output_count))
-            print('Total Error Count: ' + str(metric.total_error_count))
-            print('----------')
-            print('job history')
-            h = job.history[0]
-            print(h)
-    def handle_failed_job(self, job):
+        metrics_data = {}
+        metrics_data['status'] = job.status.status
+        metrics_data['successful_run'] = True
+        metrics_data['job_template_id'] = job.template_job_id
+        metrics_data['job_id'] = job.job_id
+        metrics = job.metrics[0]
+        metrics_data['run_number'] = metrics.run_count
+        metrics_data['input_count'] = metrics.input_count
+        metrics_data['output_count'] = metrics.output_count
+        metrics_data['error_count'] = metrics.total_error_count
+        history =  job.history[0]
+        metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
+        metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
+        postgres = PostgresManager()
+        postgres.write_job_metrics_record(metrics_data)
+    @staticmethod
+    def handle_failed_job(job):
         job.refresh()
-        print('Job ' + job.job_name + ' has status ' + job.status.status )
+        metrics_data = {}
+        metrics_data['status'] = job.status.status
+        metrics_data['successful_run'] = False
+        metrics_data['job_template_id'] = job.template_job_id
+        metrics_data['job_id'] = job.job_id
+        metrics = job.metrics[0]
+        metrics_data['run_number'] = metrics.run_count
+        history = job.history[0]
+        metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
+        postgres = PostgresManager()
+        postgres.write_failed_job_run_record(metrics_data)
