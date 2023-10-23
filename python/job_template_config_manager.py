@@ -1,9 +1,5 @@
 import psycopg2
 from configparser import ConfigParser
-
-
-
-
 class JobTemplateConfigManager:
     def __init__(self):
         # Read database connection properties from ../postgres.ini file

@@ -49,7 +49,7 @@ insert into streamsets.job_template_config (
   1,
   'files-to-gcp-prod-1',
   'fb4d0b8a-8c49-45ff-ad64-62c231924352:8030c2e9-1a39-11ec-a5fe-97c8d4369386',
-  'PARAMETER',
+  'PARAM_VALUE',
   'FILE_PICKUP_DIR',
   true,
   false,
