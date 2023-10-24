@@ -2,15 +2,15 @@ import psycopg2
 from configparser import ConfigParser
 
 
-class PostgresManager:
+class DatabaseManager:
     def __init__(self):
-        # Read database connection properties from ../postgres.ini file
+        # Read database connection properties from ../database.ini file
         parser = ConfigParser()
-        parser.read('../postgres.ini')
+        parser.read('../database.ini')
         self.db_config = parser['postgresql']
 
-    # returns a Postgres connection:
-    def get_postgres_connection(self):
+    # returns a database connection:
+    def get_database_connection(self):
         db_config = self.db_config
         return psycopg2.connect(
             host=db_config['host'],
@@ -19,11 +19,11 @@ class PostgresManager:
             user=db_config['user'],
             password=db_config['password'])
 
-    # Get a Job Template Config record from postgres by its unique name
+    # Get a Job Template Config record from the database by its unique name
     def get_job_template_config(self, name):
         conn = None
         try:
-            conn = self.get_postgres_connection()
+            conn = self.get_database_connection()
             cursor = conn.cursor()
             sql = 'select * from streamsets.job_template_config where name = \'' + name + '\''
             cursor.execute(sql)
@@ -49,11 +49,11 @@ class PostgresManager:
                 # Swallow any exceptions closing the connection
                 pass
 
-    # Inserts a successful Job Metrics record into postgres
+    # Inserts a successful Job Metrics record into the database
     def write_job_metrics_record(self, metrics_data):
         conn = None
         try:
-            conn = self.get_postgres_connection()
+            conn = self.get_database_connection()
             cursor = conn.cursor()
             sql = """
             insert into streamsets.job_run_metrics (
@@ -90,11 +90,12 @@ class PostgresManager:
                 conn.close()
             except:
                 pass
-    # Inserts a failed Job run record into postgres
-    def write_failed_job_run_record(self, metrics_data):
+    # Inserts a failed Job run record into the database
+
+    def write_failed_job_metrics_record(self, metrics_data):
         conn = None
         try:
-            conn = self.get_postgres_connection()
+            conn = self.get_database_connection()
             cursor = conn.cursor()
             sql = """
             insert into streamsets.job_run_metrics (
@@ -123,15 +124,3 @@ class PostgresManager:
                 conn.close()
             except:
                 pass
-
-
-
-
-
-
-
-
-
-
-
-

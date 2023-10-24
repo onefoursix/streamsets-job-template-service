@@ -8,6 +8,8 @@ This project provides an example of how to use the [StreamSets Platform SDK](htt
 
 - Psycopg (PostgreSQL database adapter for Python - see https://pypi.org/project/psycopg2/)
 
+- Flask (A popular Python web application frameworks - see https://pypi.org/project/Flask/)
+
 - StreamSets Platform SDK for Python v6.0.1+
 
 - StreamSets Platform [API Credentials](https://docs.streamsets.com/portal/platform-controlhub/controlhub/UserGuide/OrganizationSecurity/APICredentials_title.html#concept_vpm_p32_qqb) for a user with permissions to start Jobs 
@@ -22,7 +24,7 @@ This project provides an example of how to use the [StreamSets Platform SDK](htt
   - <code>job_metrics</code>
 
 
-- Create a file named <code>postgres.ini</code> at the root of your local project directory with the following entries, with postgres connection properties, including the user and password just created:
+- Create a file named <code>database.ini</code> at the root of your local project directory with the following entries, with postgres connection properties, including the user and password just created:
 ```
 [postgresql]
 host=localhost

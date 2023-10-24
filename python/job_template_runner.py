@@ -1,13 +1,12 @@
-from postgres_manager import PostgresManager
+from database_manager import DatabaseManager
 from streamsets_manager import StreamSetsManager
 
 
-def run_job_template(name):
+def run_job_template(job_template_name):
 
     try:
-        # Get Job Template Config from Postgres
-        postgres = PostgresManager()
-        job_template_config = postgres.get_job_template_config(name)
+        # Get Job Template Config from the database
+        job_template_config = DatabaseManager().get_job_template_config(job_template_name)
 
         # Get StreamSets Manager
         streamsets_manager = StreamSetsManager()
@@ -23,5 +22,5 @@ def run_job_template(name):
         raise
 
 
-run_job_template('oracle-to-adls-prod-1')
+# run_job_template('oracle-to-adls-prod-1')
 # run_job_template('files-to-gcp-prod-1')

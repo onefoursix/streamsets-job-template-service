@@ -3,7 +3,7 @@ from streamsets.sdk import ControlHub
 from threading import Thread
 from time import time, sleep
 from datetime import datetime
-from postgres_manager import PostgresManager
+from database_manager import DatabaseManager
 
 
 job_status_update_seconds = 10
@@ -60,40 +60,49 @@ class StreamSetsManager:
             if job.status.status == 'INACTIVE' or job.status.status == 'INACTIVE_ERROR':
                 break
             sleep(job_status_update_seconds)
-        if job.status.status == 'INACTIVE':
-            self.write_metrics_for_completed_job(job)
-        else:
-            self.handle_failed_job(job)
+
+        self.write_metrics_for_job(job)
+
 
     @staticmethod
-    def write_metrics_for_completed_job(job):
-        job.refresh()
+    def write_metrics_for_job(job):
+
         metrics_data = {}
-        metrics_data['status'] = job.status.status
-        metrics_data['successful_run'] = True
-        metrics_data['job_template_id'] = job.template_job_id
-        metrics_data['job_id'] = job.job_id
-        metrics = job.metrics[0]
-        metrics_data['run_number'] = metrics.run_count
-        metrics_data['input_count'] = metrics.input_count
-        metrics_data['output_count'] = metrics.output_count
-        metrics_data['error_count'] = metrics.total_error_count
-        history =  job.history[0]
-        metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
-        metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
-        postgres = PostgresManager()
-        postgres.write_job_metrics_record(metrics_data)
-    @staticmethod
-    def handle_failed_job(job):
+
         job.refresh()
-        metrics_data = {}
-        metrics_data['status'] = job.status.status
-        metrics_data['successful_run'] = False
-        metrics_data['job_template_id'] = job.template_job_id
-        metrics_data['job_id'] = job.job_id
+
+        status = job.status.status
+
         metrics = job.metrics[0]
-        metrics_data['run_number'] = metrics.run_count
         history = job.history[0]
+
+        metrics_data['status'] = status
+        metrics_data['job_template_id'] = job.template_job_id
+        metrics_data['job_id'] = job.job_id
+        metrics_data['run_number'] = metrics.run_count
         metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
-        postgres = PostgresManager()
-        postgres.write_failed_job_run_record(metrics_data)
+
+        # If the Job completed successfully
+        if status == 'INACTIVE':
+            metrics_data['successful_run'] = True
+            metrics_data['input_count'] = metrics.input_count
+            metrics_data['output_count'] = metrics.output_count
+            metrics_data['error_count'] = metrics.total_error_count
+            metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
+            DatabaseManager().write_job_metrics_record(metrics_data)
+
+        # If the Job failed
+        else:
+            metrics_data['successful_run'] = False
+            DatabaseManager().write_failed_job_metrics_record(metrics_data)
+
+
+
+
+
+
+
+
+
+
+
