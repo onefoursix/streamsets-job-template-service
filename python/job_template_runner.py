@@ -8,8 +8,8 @@ logger = logging.getLogger(__name__)
 def run_job_template(args: dict):
 
     try:
-        user_id = args['user_id']
-        user_run_id = args['user_run_id']
+        user_id = args['user-id']
+        user_run_id = args['user-run-id']
         job_template_config_name = args['job-template-config-name']
 
         # Get Job Template Config from the database
