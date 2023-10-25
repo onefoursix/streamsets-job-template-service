@@ -41,7 +41,7 @@ Here is an overview of the process:
 	  -H "content-type: application/json" \
 	  -d '{"user_id": "mark", "user_run_id": "run-123", "job-template-config-name": "oracle-to-adls-prod-1"}'
 ```
-You can use any arbitrary non-empty string values for the <code>user-id</code>, a  <code>user-run-id</code>.  The values passed in can be used subsequently to correlate the Job metrics records for Jobs associated with the run.
+You can use any arbitrary non-empty string values for the <code>user-id</code>, and  <code>user-run-id</code>.  The values passed in can be used subsequently to correlate the Job metrics records for Jobs associated with the run.
 
 - The REST API endpoint calls the  <code>run_job_template</code> method in the file [job_template_runner.py](python/job_template_runner.py)
 
