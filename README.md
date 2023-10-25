@@ -140,7 +140,7 @@ And you should see brief output like this:
 
 Tail the app's log to see messages, like this:
 
-<img src="images/tail-log.png" alt="log" width="700" />
+<img src="images/log-tail.png" alt="log" width="700" />
 
 ## Call the Service using the REST API
 
