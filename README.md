@@ -18,6 +18,8 @@ Here is an overview of the process:
 
 ## Prerequisites
 
+- A PostgreSQL database
+
 - Python 3.8+
 
 - [Psycopg](https://pypi.org/project/psycopg2/) - PostgreSQL database adapter for Python
