@@ -169,5 +169,7 @@ Once the instances complete, you should see their metrics in the <code>streamset
 <code>SQL> select * from streamsets.job_run_metrics;</code>
 <img src="images/metrics.png" alt="metrics" width="700" />
 
+Note the <code>user-id</code> and <code>user-run-id</code> fields added to the job_run_metrics table which allows the user to correlate their request with the subsequently written metrics.
+
 
 
