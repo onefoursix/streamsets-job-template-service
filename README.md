@@ -77,7 +77,6 @@ password=streamsets
 [streamsets]
 cred_id=<YOUR CRED ID>
 cred_token=<YOUR CRED TOKEN>
-
 ```
 
 - Create or select an existing parameterized pipeline and Job Template in Control Hub
@@ -147,7 +146,7 @@ In a new terminal session, call the service like this, referencing the name of a
         $ curl -X POST \
           "http://localhost:8888/streamsets/job-template-runner" \
           -H "content-type: application/json" \
-          -d '{"job-template-config-name": "template-1-prod-1"}'
+          -d '{"user_id": "mark", "user_run_id": "run-123", "job-template-config-name": "template-1-prod-1"}'
 
 In my case, this config will launch two Job Template Instances.
 
@@ -166,6 +165,8 @@ You should see your Job Template Instances are running:
 
 Once the instances complete, you should see their metrics in the <code>streamsets.job_run_metrics</code> table:
 
+
+<code>SQL> select * from streamsets.job_run_metrics;</code>
 <img src="images/metrics.png" alt="metrics" width="700" />
 
 
