@@ -1,5 +1,6 @@
 ## streamsets-job-template-service
 This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to parameterize and start Job Template instances based on settings and parameters retrieved from a  database table. After Jobs complete, Job metrics are captured and written back to the database. A REST API service wrapper is provided for integration flexibility.
+In this version, Jobs are assumed to be batch Jobs and metrics are gathered after the Jobs complete. One could enhance this project to capture metrics for streaming Jobs as well.
 
 ## Overview
 
@@ -139,7 +140,7 @@ And you should see output like this:
 <img src="images/startup.png" alt="startup" width="700" />
 
 
-## Call the Service
+## Call the Service using the REST API
 
 In a new terminal session, call the service like this, referencing the name of a Job Template Config that exists in the <code>job_template_config</code> table:
 
@@ -155,4 +156,30 @@ If all goes well, the service should return an <code>OK</code> status:
 <img src="images/ok.png" alt="ok" width="700" />
 
 
+## Start a Job Template using Python
+
+In a new terminal session, call the service like this, referencing the name of a Job Template Config that exists in the <code>job_template_config</code> table:
+
+        $ curl -X POST \
+          "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
+          -H "content-type: application/json" \
+          -d '{"job-template-name": "oracle-to-adls-prod-1"}'
+
+In my case, this config will launch two Job Template Instances.
+
+If all goes well, the service should return an <code>OK</code> status:
+
+<img src="images/ok.png" alt="ok" width="700" />
 	
+## Confirm the Job Template Instances are Running
+
+You should see your Job Template Instances are running:
+
+<img src="images/instances.png" alt="instances" width="700" />
+
+Once the instances complete, you should see their metrics in the <code>streamsets.job_run_metrics</code> table:
+
+<img src="images/metrics.png" alt="metrics" width="700" />
+
+
+
