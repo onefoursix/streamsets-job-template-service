@@ -75,8 +75,8 @@ password=streamsets
 - Create a file named <code>streamsets.ini</code> at the root of your local project directory with the following entries:
 ```
 [streamsets]
-cred_id=<your CRED ID>
-cred_token=<your CRED_TOKEN>
+cred_id=<YOUR CRED ID>
+cred_token=<YOUR CRED TOKEN>
 
 ```
 
