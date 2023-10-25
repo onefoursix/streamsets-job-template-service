@@ -1,5 +1,19 @@
 ## streamsets-job-template-service
-This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to parameterize and start Job Template instances based on settings in a PostgreSQL database.  A REST API service wrapper is also provided.
+This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to parameterize and start Job Template instances based on settings and parameters retrieved from a  database table. After Jobs complete, Job metrics are captured and written back to the database. A REST API service wrapper is provided for integration flexibility.
+
+### Overview
+
+Here is an overview of the process:
+
+- A Data Analyst submits a request to run a Job to an app that makes a REST API call to the Job-Template Service, or a scheduler like Apache Airflow uses Python bindings to start a Given Job Template.
+
+- A Python application that uses the StreamSets SDK retrieves the Job Template configuration from the database
+
+- Job Template Instance(s) are created and started
+
+- The app waits until the Job(s) complete, then gathers their metrics and inserts the Job metric details into the database
+
+<img src="images/overview.png" alt="overview" width="800" align="center"/>
 
 
 ### Prerequisites
