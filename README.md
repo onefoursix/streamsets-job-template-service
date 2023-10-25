@@ -141,7 +141,7 @@ And you should see output like this:
 
 ## Call the Service using the REST API
 
-In a new terminal session, call the service like this, referencing the name of a Job Template Config that exists in the <code>job_template_config</code> table:
+In a new terminal session, call the service like this, referencing a <code>user-id</code>, a  <code>user-run-id</code>, and the name of a Job Template Config that exists in the <code>job_template_config</code> table:
 
         $ curl -X POST \
           "http://localhost:8888/streamsets/job-template-runner" \
