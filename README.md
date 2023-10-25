@@ -128,12 +128,12 @@ insert into streamsets.job_template_config (
 - The Service's port number is currently hardcoded to port <code>8888</code> in the file <code>job_template_service.py</code>; feel free to change that.	
 	
 ## Start the service
-For debugging purposes, change to the project's <code>python</code> directory, and start the service in the foreground in its own terminal session using a command like this:
+Change to the project's <code>python</code> directory, and start the service in the foreground in its own terminal session using a command like this:
 
     $ python job_template_service.py
 
 
-And you should see output like this:
+And you should see brief output like this:
 
 
 <img src="images/startup.png" alt="startup" width="700" />
