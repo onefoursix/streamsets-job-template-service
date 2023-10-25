@@ -12,12 +12,12 @@ logging.basicConfig(filename=log_file,level=logging.INFO)
 app = Flask(__name__)
 
 def validate_request_data(json):
-    if not (isinstance(json['user_id'], str) and len(json['user_id']) > 0):
-        message = "Bad value for \'user_id\' arg"
+    if not (isinstance(json['user-id'], str) and len(json['user-id']) > 0):
+        message = "Bad value for \'user-id\' arg"
         logger.error(message)
         raise Exception(message)
-    if not (isinstance(json['user_run_id'], str) and len(json['user_run_id']) > 0):
-        message = "Bad value for \'user_run_id\' arg"
+    if not (isinstance(json['user-run-id'], str) and len(json['user-run-id']) > 0):
+        message = "Bad value for \'user-run-id\' arg"
         logger.error(message)
         raise Exception (message)
     if not (isinstance(json['job-template-config-name'], str) and len(json['job-template-config-name']) > 0):

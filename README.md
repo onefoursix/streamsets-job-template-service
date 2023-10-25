@@ -34,12 +34,12 @@ Here is an overview of the process:
 
 - The REST API is implemented using Flask in the file [job_template_service.py](python/job_template_service.py)
 
-- The API expects a POST with a JSON payload that passes in a <code>user_id</code>, a  <code>user_run_id</code>, and a <code>job-template-config-name</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
+- The API expects a POST with a JSON payload that passes in a <code>user-id</code>, a  <code>user-run-id</code>, and a <code>job-template-config-name</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
 ```
 	$ curl -X POST \
 	  "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
 	  -H "content-type: application/json" \
-	  -d '{"user_id": "mark", "user_run_id": "run-123", "job-template-config-name": "oracle-to-adls-prod-1"}'
+	  -d '{"user-id": "mark", "user-run-id": "run-123", "job-template-config-name": "oracle-to-adls-prod-1"}'
 ```
 You can use any arbitrary non-empty string values for the <code>user-id</code>, and  <code>user-run-id</code>.  The values passed in can be used subsequently to correlate the Job metrics records for Jobs associated with the run.
 
@@ -146,7 +146,7 @@ In a new terminal session, call the service like this, referencing a <code>user_
         $ curl -X POST \
           "http://localhost:8888/streamsets/job-template-runner" \
           -H "content-type: application/json" \
-          -d '{"user_id": "mark", "user_run_id": "run-123", "job-template-config-name": "template-1-prod-1"}'
+          -d '{"user-id": "mark", "user-run-id": "run-123", "job-template-config-name": "template-1-prod-1"}'
 
 In my case, this config will launch two Job Template Instances.
 
@@ -169,7 +169,7 @@ Once the instances complete, you should see their metrics in the <code>streamset
 <code>SQL> select * from streamsets.job_run_metrics;</code>
 <img src="images/metrics.png" alt="metrics" width="700" />
 
-Note the <code>user-id</code> and <code>user-run-id</code> fields added to the <code>job_run_metrics</code> table which allows the user to correlate their request with the subsequently written metrics.
+Note the <code>user_id</code> and <code>user_run_id</code> fields added to the <code>job_run_metrics</code> table which allows the user to correlate their request with the subsequently written metrics.
 
 
 
