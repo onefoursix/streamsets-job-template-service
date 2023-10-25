@@ -34,7 +34,7 @@ Here is an overview of the process:
 
 - The REST API is implemented using Flask in the file [job_template_service.py](python/job_template_service.py)
 
-- The API expects a POST with a JSON payload that passes in a <code>user-id</code>, a  <code>user-run-id</code>, and a <code>job-template-config-name</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
+- The API expects a POST with a JSON payload that passes in a <code>user_id</code>, a  <code>user_run_id</code>, and a <code>job-template-config-name</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
 ```
 	$ curl -X POST \
 	  "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
@@ -141,7 +141,7 @@ And you should see output like this:
 
 ## Call the Service using the REST API
 
-In a new terminal session, call the service like this, referencing a <code>user-id</code>, a  <code>user-run-id</code>, and the name of a Job Template Config that exists in the <code>job_template_config</code> table:
+In a new terminal session, call the service like this, referencing a <code>user_id</code>, a  <code>user_run_id</code>, and the name of a Job Template Config that exists in the <code>job_template_config</code> table:
 
         $ curl -X POST \
           "http://localhost:8888/streamsets/job-template-runner" \
