@@ -20,7 +20,3 @@ def run_job_template(job_template_name):
     except Exception as e:
         print('Error running Job Template' + str(e))
         raise
-
-
-# run_job_template('oracle-to-adls-prod-1')
-# run_job_template('files-to-gcp-prod-1')

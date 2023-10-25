@@ -5,9 +5,12 @@ from time import time, sleep
 from datetime import datetime
 from database_manager import DatabaseManager
 
-
+# How often to check for updated Job Status
 job_status_update_seconds = 10
-max_wait_time_for_job_seconds = 10 * 60  # ten minutes
+
+# How long to wait for a JOb to finish. Jobs that take longer
+# than this amount of time will be considered to have failed.
+max_wait_time_for_job_seconds = 4 * 60 * 60  # four hours
 
 
 class StreamSetsManager:
@@ -63,7 +66,6 @@ class StreamSetsManager:
 
         self.write_metrics_for_job(job)
 
-
     @staticmethod
     def write_metrics_for_job(job):
 
@@ -82,27 +84,16 @@ class StreamSetsManager:
         metrics_data['run_number'] = metrics.run_count
         metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
 
+        # If the Job failed
+        if status != 'INACTIVE':
+            metrics_data['successful_run'] = False
+            DatabaseManager().write_failed_job_metrics_record(metrics_data)
+
         # If the Job completed successfully
-        if status == 'INACTIVE':
+        else:
             metrics_data['successful_run'] = True
             metrics_data['input_count'] = metrics.input_count
             metrics_data['output_count'] = metrics.output_count
             metrics_data['error_count'] = metrics.total_error_count
             metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
             DatabaseManager().write_job_metrics_record(metrics_data)
-
-        # If the Job failed
-        else:
-            metrics_data['successful_run'] = False
-            DatabaseManager().write_failed_job_metrics_record(metrics_data)
-
-
-
-
-
-
-
-
-
-
-
