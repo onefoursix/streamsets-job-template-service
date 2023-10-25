@@ -4,6 +4,9 @@ from threading import Thread
 from time import time, sleep
 from datetime import datetime
 from database_manager import DatabaseManager
+import logging
+
+logger = logging.getLogger(__name__)
 
 # How often to check for updated Job Status
 job_status_update_seconds = 10
@@ -33,8 +36,7 @@ class StreamSetsManager:
         try:
             job_template = self.sch.jobs.get(job_id=config['job_template_id'])
         except Exception as e:
-            print('Error: Job Template with ID \'' + config['job_template_id'] + '\' not found.')
-            print(str(e))
+            logger.error('Error: Job Template with ID \'' + config['job_template_id'] + '\' not found.' + str(e))
             raise
 
         # Start the Job Template and return the list of Job Template Instances
@@ -47,14 +49,15 @@ class StreamSetsManager:
             delete_after_completion=config['delete_after_completion'])
 
     # Get metrics for all Job Template Instances once they complete
-    def get_metrics(self, job_template_instances):
+    def get_metrics(self, user_id, user_run_id, job_template_instances):
         for job in job_template_instances:
             # Track each Job Template Instance in a separate thread to avoid blocking
-            thread = Thread(target=self.wait_for_job_completion_and_get_metrics, args=(job,))
+            thread = Thread(target=self.wait_for_job_completion_and_get_metrics,
+                            args=(user_id,user_run_id,job,))
             thread.start()
 
     # Waits for Job to complete before getting its metrics
-    def wait_for_job_completion_and_get_metrics(self, job):
+    def wait_for_job_completion_and_get_metrics(self, user_id, user_run_id, job):
         start_seconds = time()
         elapsed_seconds = 0
         while elapsed_seconds < max_wait_time_for_job_seconds:
@@ -64,12 +67,14 @@ class StreamSetsManager:
                 break
             sleep(job_status_update_seconds)
 
-        self.write_metrics_for_job(job)
+        self.write_metrics_for_job(user_id, user_run_id, job)
 
     @staticmethod
-    def write_metrics_for_job(job):
+    def write_metrics_for_job(user_id, user_run_id, job):
 
         metrics_data = {}
+        metrics_data['user_id'] = user_id
+        metrics_data['user_run_id'] = user_run_id
 
         job.refresh()
 

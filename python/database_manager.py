@@ -1,6 +1,8 @@
 import psycopg2
 from configparser import ConfigParser
+import logging
 
+logger = logging.getLogger(__name__)
 
 class DatabaseManager:
     def __init__(self):
@@ -42,6 +44,8 @@ class DatabaseManager:
             else:
                 print('Error: No  job_template_config record found for name \'' + name + '\'')
                 return None
+        except Exception as e:
+            logger.error("Error reading job_template_config from Postgres " + str(e))
         finally:
             try:
                 conn.close()
@@ -57,6 +61,8 @@ class DatabaseManager:
             cursor = conn.cursor()
             sql = """
             insert into streamsets.job_run_metrics (
+                user_id,
+                user_run_id,
                 job_template_id,
                 job_id,
                 run_number,
@@ -68,9 +74,11 @@ class DatabaseManager:
                 start_time,
                 finsh_time
             ) values ( 
-                \'{}\',\'{}\',{},{},\'{}\',{},{},{},\'{}\',\'{}\'
+                \'{}\',\'{}\',\'{}\',\'{}\',{},{},\'{}\',{},{},{},\'{}\',\'{}\'
             )
             """.format(
+                metrics_data['user_id'],
+                metrics_data['user_run_id'],
                 metrics_data['job_template_id'],
                 metrics_data['job_id'],
                 metrics_data['run_number'],
@@ -84,14 +92,15 @@ class DatabaseManager:
             )
             cursor.execute(sql)
             conn.commit()
-
+        except Exception as e:
+            logger.error("Error writing job_run_metrics to Postgres " + str(e))
         finally:
             try:
                 conn.close()
             except:
                 pass
-    # Inserts a failed Job run record into the database
 
+    # Inserts a failed Job run record into the database
     def write_failed_job_metrics_record(self, metrics_data):
         conn = None
         try:
@@ -99,6 +108,8 @@ class DatabaseManager:
             cursor = conn.cursor()
             sql = """
             insert into streamsets.job_run_metrics (
+                user_id,
+                user_run_id,
                 job_template_id,
                 job_id,
                 run_number,
@@ -106,9 +117,11 @@ class DatabaseManager:
                 status,
                 start_time
             ) values ( 
-                \'{}\',\'{}\',{},{},\'{}\',\'{}\'
+                \'{}\',\'{}\',\'{}\',\'{}\',{},{},\'{}\',\'{}\'
             )
             """.format(
+                metrics_data['user_id'],
+                metrics_data['user_run_id'],
                 metrics_data['job_template_id'],
                 metrics_data['job_id'],
                 metrics_data['run_number'],
@@ -118,7 +131,8 @@ class DatabaseManager:
             )
             cursor.execute(sql)
             conn.commit()
-
+        except Exception as e:
+            logger.error("Error writing job_run_metrics to Postgres " + str(e))
         finally:
             try:
                 conn.close()

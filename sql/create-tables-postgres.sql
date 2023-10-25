@@ -15,6 +15,8 @@ create table streamsets.job_template_config(
 );
 
 create table streamsets.job_run_metrics (
+  user_id                   character varying    not null,
+  user_run_id               character varying    not null,
   job_template_id           character varying    not null,
   job_id                    character varying    not null,
   run_number                bigint               not null,

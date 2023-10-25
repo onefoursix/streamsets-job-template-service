@@ -34,14 +34,14 @@ Here is an overview of the process:
 
 - The REST API is implemented using Flask in the file [job_template_service.py](python/job_template_service.py)
 
-- The API expects a POST with a JSON payload that passes in a <code>job-template-config-name</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
+- The API expects a POST with a JSON payload that passes in a <code>user-id</code>, a  <code>user-run-id</code>, and a <code>job-template-config-name</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
 ```
 	$ curl -X POST \
 	  "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
 	  -H "content-type: application/json" \
-	  -d '{"job-template-config-name": "oracle-to-adls-prod-1"}'
+	  -d '{"user_id": "mark", "user_run_id": "run-123", "job-template-config-name": "oracle-to-adls-prod-1"}'
 ```
-
+You can use any arbitrary non-empty string values for the <code>user-id</code>, a  <code>user-run-id</code>.  The values passed in can be used subsequently to correlate the Job metrics records for Jobs associated with the run.
 
 - The REST API endpoint calls the  <code>run_job_template</code> method in the file [job_template_runner.py](python/job_template_runner.py)
 
@@ -117,7 +117,9 @@ insert into streamsets.job_template_config (
 ```
 - Make sure each <code>job_template_config</code> record has a unique name, like <code>files-to-gcp-prod-1</code>. This allows multiple different parameter values to be saved as configurations for a given Job Template. There are additional sample config values in the file [sample-job-template-config-records.sql](sql/sample-job-template-config-records.sql)
 
+- Edit the value set in this line in the file <code>python/job_template_service.py</code> to specify where the application's log will be written to.  All modules share this log so for example, if there are permissions issues writing to the database tables, error messages should appear in this log:
 
+    log_file = '/tmp/streamsets-job-template-service.log'
 
 - Edit the value set in this line in the file <code>python/streamsets_manager.py</code> as this value sets the maximum time the app will wait for a Job to complete before getting its metrics.  Jobs that take longer to complete will be considered as having failed.
 

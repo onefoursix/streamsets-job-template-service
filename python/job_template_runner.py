@@ -1,22 +1,29 @@
 from database_manager import DatabaseManager
 from streamsets_manager import StreamSetsManager
+import logging
 
+import logging
+logger = logging.getLogger(__name__)
 
-def run_job_template(job_template_config_name):
+def run_job_template(args: dict):
 
     try:
+        user_id = args['user_id']
+        user_run_id = args['user_run_id']
+        job_template_config_name = args['job-template-config-name']
+
         # Get Job Template Config from the database
-        job_template_config = DatabaseManager().get_job_template_config(job_template_config_name)
+        config = DatabaseManager().get_job_template_config(job_template_config_name)
 
         # Get StreamSets Manager
         streamsets_manager = StreamSetsManager()
 
         # Start the Job Template
-        job_template_instances = streamsets_manager.run_job_template(job_template_config)
+        job_template_instances = streamsets_manager.run_job_template(config)
 
         # Get metrics when Job(s) complete
-        streamsets_manager.get_metrics(job_template_instances)
+        streamsets_manager.get_metrics(user_id, user_run_id, job_template_instances)
 
     except Exception as e:
-        print('Error running Job Template' + str(e))
+        logger.error('Error running Job Template' + str(e))
         raise
