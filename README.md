@@ -138,6 +138,9 @@ And you should see brief output like this:
 
 <img src="images/startup.png" alt="startup" width="700" />
 
+Tail the app's log to see messages, like this:
+
+<img src="images/tail-log.png" alt="log" width="700" />
 
 ## Call the Service using the REST API
 
