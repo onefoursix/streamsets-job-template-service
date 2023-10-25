@@ -24,7 +24,7 @@ Here is an overview of the process:
 
 - [Psycopg](https://pypi.org/project/psycopg2/) - PostgreSQL database adapter for Python
 
-- [Flask](https://pypi.org/project/Flask/) - Python web application frameworks 
+- [Flask](https://pypi.org/project/Flask/) - Python web application framework 
 
 - StreamSets Platform SDK for Python v6.0.1+
 
