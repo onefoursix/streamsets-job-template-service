@@ -113,7 +113,7 @@ insert into streamsets.job_template_config (
   ]'
 )
 ```
-- Make sure each <code>job_template_config</code> record has a unique name, like <code>files-to-gcp-prod-1</code>. This allows multiple different parameter values to be saved as configurations ffor a given Job Template. There are additional samples config values in the file [sample-job-template-config-records.sql](sql/sample-job-template-config-records.sql)
+- Make sure each <code>job_template_config</code> record has a unique name, like <code>files-to-gcp-prod-1</code>. This allows multiple different parameter values to be saved as configurations for a given Job Template. There are additional sample config values in the file [sample-job-template-config-records.sql](sql/sample-job-template-config-records.sql)
 
 
 
@@ -152,20 +152,7 @@ If all goes well, the service should return an <code>OK</code> status:
 <img src="images/ok.png" alt="ok" width="700" />
 
 
-## Start a Job Template using Python
 
-In a new terminal session, call the service like this, referencing the name of a Job Template Config that exists in the <code>job_template_config</code> table:
-
-        $ curl -X POST \
-          "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
-          -H "content-type: application/json" \
-          -d '{"job-template-name": "oracle-to-adls-prod-1"}'
-
-In my case, this config will launch two Job Template Instances.
-
-If all goes well, the service should return an <code>OK</code> status:
-
-<img src="images/ok.png" alt="ok" width="700" />
 	
 ## Confirm the Job Template Instances are Running
 
