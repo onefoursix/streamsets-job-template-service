@@ -6,7 +6,7 @@ In this version, Jobs are assumed to be batch Jobs and metrics are gathered afte
 
 Here is an overview of the process:
 
-- A Data Analyst can submit a request to run a Job to an app that makes REST API calls to the Job-Template-Service, or a scheduler like Apache Airflow can use Python bindings to directly call the Python Job Template Runner script.
+- A Data Analyst submits a request to run a Job to an app that makes REST API calls to the Job-Template-Service, or a scheduler like Apache Airflow uses Python bindings to directly call the Python Job Template Runner script.
 
 - A Python application built using the StreamSets SDK retrieves Job Template configurations from a database table
 
@@ -32,7 +32,7 @@ Here is an overview of the process:
 
 - The REST API is implemented using Flask in the file [job_template_service.py](python/job_template_service.py)
 
-- The API expects a POST with a JSON payload that passes in the name of a <code>job-template-config</code> to the endpoint </code>/streamsets/job-template-runner</code>. An example call looks like this:
+- The API expects a POST with a JSON payload that passes in the name of a <code>job-template-config</code> to the endpoint <code>/streamsets/job-template-runner</code>. An example call looks like this:
 ```
 	$ curl -X POST \
 	  "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
@@ -46,7 +46,7 @@ Here is an overview of the process:
 - All interaction with the StreamSets Platform is managed by the class <code>StreamSetsManager</code> in the file [streamsets_manager.py](python/streamsets_manager.py)
 
 
-- All interaction with the database managed by the class <code>DatabaseManager</code> in the file [database_manager.py](python/database_manager.py)
+- All interaction with the database is managed by the class <code>DatabaseManager</code> in the file [database_manager.py](python/database_manager.py)
 
 <img src="images/python.png" alt="python" width="700" />
 
@@ -113,11 +113,7 @@ insert into streamsets.job_template_config (
   ]'
 )
 ```
-**Make sure each <code>job_template_config</code> record has a unique name, like <code>files-to-gcp-prod-1</code>**
-
-This allows multiple different parameter values to be saved as configurations ffor a given Job Template.
-
-There are additional samples config values in the file [sample-job-template-config-records.sql](sql/sample-job-template-config-records.sql)
+- Make sure each <code>job_template_config</code> record has a unique name, like <code>files-to-gcp-prod-1</code>. This allows multiple different parameter values to be saved as configurations ffor a given Job Template. There are additional samples config values in the file [sample-job-template-config-records.sql](sql/sample-job-template-config-records.sql)
 
 
 
