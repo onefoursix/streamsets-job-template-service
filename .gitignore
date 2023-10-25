@@ -7,5 +7,5 @@ _build
 .gitreview
 .python-version
 venv/*
-postgres.ini
+database.ini
 streamsets.ini
