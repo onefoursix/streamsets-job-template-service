@@ -12,7 +12,7 @@ create table streamsets.job_template_config(
   delete_after_completion   boolean              not null, 
   runtime_parameters        jsonb                not null,
   CONSTRAINT name_unique UNIQUE (name)
-)
+);
 
 create table streamsets.job_run_metrics (
   job_template_id           character varying    not null,

@@ -15,7 +15,7 @@ insert into streamsets.job_template_config values (
         "GCS_DIRECTORY": "files"
       }
   ]'
-)
+);
 
 insert into streamsets.job_template_config values (
   2,
@@ -37,4 +37,25 @@ insert into streamsets.job_template_config values (
       "ORACLE_TABLE_PATTERN": "TAXI_TRIPS"
     }
   ]'
-)
+);
+
+insert into streamsets.job_template_config values (
+  3,
+  'template-1-prod-1',
+  'ca73b645-1f2e-4ecb-b5ea-8d825a4e8944:8030c2e9-1a39-11ec-a5fe-97c8d4369386',
+  'PARAM_VALUE',
+  'p1',
+  true,
+  false,
+  '[
+    {
+      "p1": "1000"
+    },
+    {
+      "p1": "1001"
+    }
+  ]'
+);
+
+
+

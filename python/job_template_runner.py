@@ -2,11 +2,11 @@ from database_manager import DatabaseManager
 from streamsets_manager import StreamSetsManager
 
 
-def run_job_template(job_template_name):
+def run_job_template(job_template_config_name):
 
     try:
         # Get Job Template Config from the database
-        job_template_config = DatabaseManager().get_job_template_config(job_template_name)
+        job_template_config = DatabaseManager().get_job_template_config(job_template_config_name)
 
         # Get StreamSets Manager
         streamsets_manager = StreamSetsManager()

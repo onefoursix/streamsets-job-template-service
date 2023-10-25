@@ -39,7 +39,7 @@ Here is an overview of the process:
 	$ curl -X POST \
 	  "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
 	  -H "content-type: application/json" \
-	  -d '{"job-template-name": "oracle-to-adls-prod-1"}'
+	  -d '{"job-template-config-name": "oracle-to-adls-prod-1"}'
 ```
 
 
