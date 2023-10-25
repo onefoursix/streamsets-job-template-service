@@ -143,9 +143,9 @@ And you should see output like this:
 In a new terminal session, call the service like this, referencing the name of a Job Template Config that exists in the <code>job_template_config</code> table:
 
         $ curl -X POST \
-          "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \
+          "http://localhost:8888/streamsets/job-template-runner" \
           -H "content-type: application/json" \
-          -d '{"job-template-name": "oracle-to-adls-prod-1"}'
+          -d '{"job-template-config-name": "template-1-prod-1"}'
 
 In my case, this config will launch two Job Template Instances.
 
