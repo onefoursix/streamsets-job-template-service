@@ -152,7 +152,7 @@ In my case, this config will launch two Job Template Instances.
 
 If all goes well, the service should return an <code>OK</code> status:
 
-<img src="images/ok.png" alt="ok" width="700" />
+<img src="images/start-ok.png" alt="ok" width="700" />
 
 
 
