@@ -121,7 +121,15 @@ cred_token=<YOUR CRED TOKEN>
 
 
 ```
-insert into streamsets.job_template_config values (
+insert into streamsets.job_template_config (
+  id,
+  name,
+  job_template_id,
+  instance_name_suffix,
+  parameter_name,
+  attach_to_template,
+  delete_after_completion
+) values (
   1,
   'http-to-gcs',
   'c09f728a-2a73-4c7e-b735-2512039a9e6b:8030c2e9-1a39-11ec-a5fe-97c8d4369386',
@@ -188,7 +196,9 @@ In a new terminal session, call the service like this, referencing a <code>user-
             ]
           }'
 
-In my case, this config will launch two Job Template Instances.
+In this case, this config will launch two Job Template Instances.
+
+The application will select the template named <code>http-to-gcs</code> based on the source-type and target-type values.
 
 If all goes well, the service should return an <code>OK</code> status:
 
