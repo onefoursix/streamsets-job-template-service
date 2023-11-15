@@ -40,7 +40,7 @@ Here is an overview of the process:
 
 - The REST API is implemented using Flask in the file [job_template_service.py](python/job_template_service.py)
 
-- Assume we want to create an run an instance of a Job Template named <code>REST API to Google Cloud Storage</code> that expects this set of runtime parameters:
+- Assume we want to create and run an instance of a Job Template named <code>REST API to Google Cloud Storage</code> that expects this set of runtime parameters:
 
 <img src="images/job-template-params.png" alt="job-template-params" width="300" />
 
@@ -52,7 +52,7 @@ Here is an overview of the process:
         target-type
         runtime-parameters
         
-    An example call would look like this:
+    An example call might look like this:
 ```
      $ curl -X POST \
 	  "http://sequoia.onefoursix.com:8888/streamsets/job-template-runner" \

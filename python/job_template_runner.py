@@ -1,18 +1,17 @@
 from database_manager import DatabaseManager
 from streamsets_manager import StreamSetsManager
-import logging
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-def get_template_for_source_and_target(source,target):
+def get_template_for_source_and_target(source, target):
     # A single hardcoded example
     if source == 'http' and target == 'gcs':
         return 'http-to-gcs'
 
-def run_job_template(request: dict):
 
+def run_job_template(request: dict):
 
     try:
 

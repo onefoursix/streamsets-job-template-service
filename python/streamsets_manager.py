@@ -5,7 +5,6 @@ from time import time, sleep
 from datetime import datetime
 from database_manager import DatabaseManager
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +14,7 @@ job_status_update_seconds = 10
 # How long to wait for a JOb to finish. Jobs that take longer
 # than this amount of time will be considered to have failed.
 max_wait_time_for_job_seconds = 4 * 60 * 60  # four hours
+
 
 class StreamSetsManager:
     def __init__(self):
@@ -53,7 +53,7 @@ class StreamSetsManager:
         for job in job_template_instances:
             # Track each Job Template Instance in a separate thread to avoid blocking
             thread = Thread(target=self.wait_for_job_completion_and_get_metrics,
-                            args=(user_id,user_run_id,job,))
+                            args=(user_id, user_run_id, job,))
             thread.start()
 
     # Waits for Job to complete before getting its metrics
@@ -72,9 +72,7 @@ class StreamSetsManager:
     @staticmethod
     def write_metrics_for_job(user_id, user_run_id, job):
 
-        metrics_data = {}
-        metrics_data['user_id'] = user_id
-        metrics_data['user_run_id'] = user_run_id
+        metrics_data = {'user_id': user_id, 'user_run_id': user_run_id}
 
         job.refresh()
 
