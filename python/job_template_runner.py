@@ -5,24 +5,31 @@ import logging
 import logging
 logger = logging.getLogger(__name__)
 
-def run_job_template(args: dict):
+
+def get_template_for_source_and_target(source,target):
+    # A single hardcoded example
+    if source == 'http' and target == 'gcs':
+        return 'http-to-gcs'
+
+def run_job_template(request: dict):
+
 
     try:
-        user_id = args['user-id']
-        user_run_id = args['user-run-id']
-        job_template_config_name = args['job-template-config-name']
+
+        # Get appropriate template for source and target types:
+        template_name = get_template_for_source_and_target(request['source-type'], request['target-type'])
 
         # Get Job Template Config from the database
-        config = DatabaseManager().get_job_template_config(job_template_config_name)
+        template = DatabaseManager().get_job_template_config(template_name)
 
         # Get StreamSets Manager
         streamsets_manager = StreamSetsManager()
 
         # Start the Job Template
-        job_template_instances = streamsets_manager.run_job_template(config)
+        job_template_instances = streamsets_manager.run_job_template(template, request)
 
         # Get metrics when Job(s) complete
-        streamsets_manager.get_metrics(user_id, user_run_id, job_template_instances)
+        streamsets_manager.get_metrics(request['user-id'], request['user-run-id'], job_template_instances)
 
     except Exception as e:
         logger.error('Error running Job Template' + str(e))

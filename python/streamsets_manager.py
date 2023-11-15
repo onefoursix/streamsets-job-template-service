@@ -5,6 +5,7 @@ from time import time, sleep
 from datetime import datetime
 from database_manager import DatabaseManager
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,6 @@ job_status_update_seconds = 10
 # How long to wait for a JOb to finish. Jobs that take longer
 # than this amount of time will be considered to have failed.
 max_wait_time_for_job_seconds = 4 * 60 * 60  # four hours
-
 
 class StreamSetsManager:
     def __init__(self):
@@ -30,23 +30,23 @@ class StreamSetsManager:
             token=streamsets_config['cred_token'])
 
     # Starts a Job Template and returns a list of Job Template Instances
-    def run_job_template(self, config):
+    def run_job_template(self, template, request):
 
         # Find the Job Template
         try:
-            job_template = self.sch.jobs.get(job_id=config['job_template_id'])
+            job_template_id = self.sch.jobs.get(job_id=template['job_template_id'])
         except Exception as e:
-            logger.error('Error: Job Template with ID \'' + config['job_template_id'] + '\' not found.' + str(e))
+            logger.error('Error: Job Template with ID \'' + template['job_template_id'] + '\' not found.' + str(e))
             raise
 
-        # Start the Job Template and return the list of Job Template Instances
+        # Start the Job Template using the runtime parameters in the request
         return self.sch.start_job_template(
-            job_template,
-            instance_name_suffix=config['instance_name_suffix'],
-            parameter_name=config['parameter_name'],
-            runtime_parameters=config['runtime_parameters'],
-            attach_to_template=config['attach_to_template'],
-            delete_after_completion=config['delete_after_completion'])
+            job_template_id,
+            runtime_parameters=request['runtime-parameters'],
+            instance_name_suffix=template['instance_name_suffix'],
+            parameter_name=template['parameter_name'],
+            attach_to_template=template['attach_to_template'],
+            delete_after_completion=template['delete_after_completion'])
 
     # Get metrics for all Job Template Instances once they complete
     def get_metrics(self, user_id, user_run_id, job_template_instances):

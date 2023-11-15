@@ -38,8 +38,7 @@ class DatabaseManager:
                                        'instance_name_suffix': row[3],
                                        'parameter_name': row[4],
                                        'attach_to_template': row[5],
-                                       'delete_after_completion': row[6],
-                                       'runtime_parameters': row[7]}
+                                       'delete_after_completion': row[6]}
                 return job_template_config
             else:
                 print('Error: No  job_template_config record found for name \'' + name + '\'')

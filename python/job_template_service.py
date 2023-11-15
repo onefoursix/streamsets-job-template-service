@@ -11,26 +11,35 @@ logging.basicConfig(filename=log_file,level=logging.INFO)
 
 app = Flask(__name__)
 
-def validate_request_data(json):
-    if not (isinstance(json['user-id'], str) and len(json['user-id']) > 0):
-        message = "Bad value for \'user-id\' arg"
+def validate_request_string_arg(payload, key):
+    if not (key in payload.keys() and isinstance(payload[key], str) and len(payload[key]) > 0):
+        message = 'Bad value for \'{}}\' arg'.format(key)
         logger.error(message)
         raise Exception(message)
-    if not (isinstance(json['user-run-id'], str) and len(json['user-run-id']) > 0):
-        message = "Bad value for \'user-run-id\' arg"
+
+def validate_request_list_arg(payload, key):
+    if not (key in payload.keys() and isinstance(payload[key], list) and len(payload[key]) > 0):
+        message = 'Bad value for \'{}\' arg'.format(key)
         logger.error(message)
-        raise Exception (message)
-    if not (isinstance(json['job-template-config-name'], str) and len(json['job-template-config-name']) > 0):
-        message = "Bad value for \'job-template-config-name\' arg"
-        logger.error(message)
-        raise Exception (message)
+        raise Exception(message)
+
+def validate_request_payload(json):
+    validate_request_string_arg(json, 'user-id')
+    validate_request_string_arg(json, 'user-run-id')
+    validate_request_string_arg(json, 'source-type')
+    validate_request_string_arg(json, 'target-type')
+    validate_request_list_arg(json, 'runtime-parameters')
 
 @app.route('/streamsets/job-template-runner', methods=['POST'])
 def handle_job_template_runner_request():
     logger.info('handle_job_template_runner_request')
     try:
-        validate_request_data(request.json)
+        validate_request_payload(request.json)
+        print('-- REQUEST PAYLOAD ----------')
+        print(request.json)
+        print('-----------------------------')
         job_template_runner.run_job_template(request.json)
+
         return {"status": "OK"}
     except Exception as e:
         return {"status": "There was an error: " + str(e)}

@@ -9,8 +9,7 @@ create table streamsets.job_template_config(
   instance_name_suffix      character varying    not null, 
   parameter_name            character varying    null,   
   attach_to_template        boolean              not null, 
-  delete_after_completion   boolean              not null, 
-  runtime_parameters        jsonb                not null,
+  delete_after_completion   boolean              not null,
   CONSTRAINT name_unique UNIQUE (name)
 );
 
