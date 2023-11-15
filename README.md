@@ -8,13 +8,13 @@ Here is an overview of the process:
 
 - A Data Analyst submits a request to run a Job to an app that makes REST API calls to the Job-Template-Service, or a scheduler like Apache Airflow uses Python bindings to directly call the Python Job Template Runner script.
 
-- The Job Template that is run is dynamically selected based on rules applied to the request's <code>source-type</code> and the <code>target-type</code>
+- The Job Template that is run is dynamically selected based on rules applied to the request's <code>source-type</code> and  <code>target-type</code>
 
 
 - The Job's runtime parameters are passed in the request
 
 
-- A Python application built using the StreamSets SDK selects the appropriate Job Template,  and retrieves the Job Template configuration from a database table
+- A Python application built using the StreamSets SDK selects the appropriate Job Template and retrieves the Job Template configuration from a database table
 
 - The Python Application creates and starts Job Template Instance(s) that StreamSets Control Hub schedules on engines.
 
@@ -40,7 +40,7 @@ Here is an overview of the process:
 
 - The REST API is implemented using Flask in the file [job_template_service.py](python/job_template_service.py)
 
-- Assume we want to call a Job Template named <code>REST API to Google Cloud Storage</code> that expects this set of runtime parameters:
+- Assume we want to create an run an instance of a Job Template named <code>REST API to Google Cloud Storage</code> that expects this set of runtime parameters:
 
 <img src="images/job-template-params.png" alt="job-template-params" width="300" />
 
@@ -115,7 +115,7 @@ cred_id=<YOUR CRED ID>
 cred_token=<YOUR CRED TOKEN>
 ```
 
-- Create or select an existing parameterized pipeline and Job Template in Control Hub. For example, I'll use a Job Template named 
+- Create or select an existing parameterized pipeline and Job Template in Control Hub. For example, I'll use a Job Template named <code>REST API to Google Cloud Storage</code>
 
 - Insert a record into the <code>job_template_config</code> table for the desired Job Template(s). For example, the entry for my <code>REST API to Google Cloud Storage</code> Job Template looks like this:
 
