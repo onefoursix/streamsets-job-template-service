@@ -2,33 +2,65 @@ create user streamsets with password 'streamsets';
 
 create schema streamsets authorization streamsets;
 
-create table streamsets.job_template_config(
-  id                        bigint               not null primary key,
-  name                      character varying    not null,
-  job_template_id           character varying    not null,
-  instance_name_suffix      character varying    not null, 
-  parameter_name            character varying    null,   
-  attach_to_template        boolean              not null, 
-  delete_after_completion   boolean              not null,
-  CONSTRAINT name_unique UNIQUE (name)
+create table streamsets.job_template(
+  job_template_id                     int               not null primary key,
+  delete_after_completion             boolean           not null,
+  source_runtime_parameters           jsonb,
+  destination_runtime_parameters      jsonb,
+  source_connection_info              jsonb,
+  destination_connection_info         jsonb,
+  create_timestamp                    timestamp          not null
 );
 
-create table streamsets.job_run_metrics (
+grant all on streamsets.job_template to streamsets;
+
+
+create table streamsets.ingestion_pattern(
+  ingestion_pattern_id              int                  not null primary key,
+  pattern_name                      character varying    not null,
+  source                            character varying    not null,
+  destination                       character varying    not null,
+  create_timestamp                  timestamp            not null
+);  
+
+grant all on streamsets.ingestion_pattern to streamsets;
+
+
+create table streamsets.ingestion_pattern_job_template_relationship(
+  relId                             int                  not null primary key,
+  ingestion_pattern_id              int                  not null,
+  job_template_id                   int                  not null,
+  schedule                          character varying,
+  CONSTRAINT ingestion_pattern_id
+      FOREIGN KEY(ingestion_pattern_id) 
+    REFERENCES streamsets.ingestion_pattern(ingestion_pattern_id),
+  CONSTRAINT job_template_id
+      FOREIGN KEY(job_template_id) 
+    REFERENCES streamsets.job_template(job_template_id)
+);  
+
+grant all on streamsets.ingestion_pattern_job_template_relationship to streamsets;
+
+
+create table streamsets.job_instance (
+  job_instance_id           int not null primary key,
+  job_run_id                int not null,
+  job_template_id           int not null,
   user_id                   character varying    not null,
-  user_run_id               character varying    not null,
-  job_template_id           character varying    not null,
-  job_id                    character varying    not null,
-  run_number                bigint               not null,
-  successful_run            boolean              not null,
-  status                    character varying    not null,
-  input_count               bigint,
-  output_count              bigint,
-  error_count               bigint,
+  engine_id                 character varying    not null,
+  pipeline_id               character varying    not null,
+  run_status                character varying    not null,
+  input_record_count        int,
+  output_record_count       int,
+  error_record_count        int,
+  error_message             character varying,
   start_time                timestamp,
-  finsh_time                timestamp
+  finsh_time                timestamp,
+  CONSTRAINT job_template_id
+      FOREIGN KEY(job_template_id) 
+    REFERENCES streamsets.job_template(job_template_id)
 );
 
-grant all on streamsets.job_template_config to streamsets;
+grant all on streamsets.job_instance to streamsets;
 
-grant all on streamsets.job_run_metrics to streamsets;
 
