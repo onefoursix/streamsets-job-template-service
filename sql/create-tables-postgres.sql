@@ -76,7 +76,6 @@ insert into streamsets.ingestion_pattern (
  values(1000, 'http-to-gcs', 'http','gcs', CURRENT_TIMESTAMP);
 
 insert into streamsets.job_template(
-
   job_template_id,
   sch_job_template_id,
   delete_after_completion,

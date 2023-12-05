@@ -15,6 +15,9 @@ def run_job_template(request: dict):
 
     try:
 
+        # Get Database Manager
+        db = DatabaseManager()
+
         # Get appropriate template for source and target types:
         template_name = get_template_for_source_and_target(request['source-type'], request['target-type'])
 
