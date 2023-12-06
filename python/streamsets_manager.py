@@ -30,23 +30,24 @@ class StreamSetsManager:
             token=streamsets_config['cred_token'])
 
     # Starts a Job Template and returns a list of Job Template Instances
-    def run_job_template(self, template, request):
+    def run_job_template(self, job_template_info, request):
 
         # Find the Job Template
+        job_template_id = job_template_info['sch_job_template_id']
         try:
-            job_template_id = self.sch.jobs.get(job_id=template['job_template_id'])
+            job_template = self.sch.jobs.get(job_id=job_template_id)
+            print('Found Job template \'{}\''.format(job_template.job_name))
         except Exception as e:
-            logger.error('Error: Job Template with ID \'' + template['job_template_id'] + '\' not found.' + str(e))
+            logger.error('Error: Job Template with ID \'' + job_template_id+ '\' not found.' + str(e))
             raise
 
         # Start the Job Template using the runtime parameters in the request
         return self.sch.start_job_template(
-            job_template_id,
+            job_template,
             runtime_parameters=request['runtime-parameters'],
-            instance_name_suffix=template['instance_name_suffix'],
-            parameter_name=template['parameter_name'],
-            attach_to_template=template['attach_to_template'],
-            delete_after_completion=template['delete_after_completion'])
+            instance_name_suffix='TIME_STAMP',
+            attach_to_template=True, #job_template_info['attach_to_template'],
+            delete_after_completion=job_template_info['delete_after_completion'])
 
     # Get metrics for all Job Template Instances once they complete
     def get_metrics(self, user_id, user_run_id, job_template_instances):

@@ -139,15 +139,13 @@ class DatabaseManager:
             except:
                 pass
     # Gets SCH Job Template ID for source and destination
-    def get_sch_job_template_id (self, source, destination):
+    def get_job_template_info (self, source, destination):
         conn = None
         try:
             conn = self.get_database_connection()
             cursor = conn.cursor()
             sql = """
            select t.sch_job_template_id,
-                  t.instance_name_suffix,
-                  t.parameter_name,
                   t.delete_after_completion,
                   t.source_runtime_parameters,
                   t.destination_runtime_parameters,
@@ -156,25 +154,22 @@ class DatabaseManager:
              from streamsets.job_template t, 
                 streamsets.ingestion_pattern_job_template_relationship r,
                 streamsets.ingestion_pattern p
-             where p.source = {}
-                and p.destination = {}
+             where p.source = '{}'
+                and p.destination = '{}'
                 and p.ingestion_pattern_id = r.ingestion_pattern_id
                 and t.job_template_id = r.job_template_id
-           
-            )
-            """.format(source, destination)
+            """.format(source, destination).replace('\n', '')
+            print(sql)
             cursor.execute(sql)
             result = cursor.fetchall()
             if result is not None and len(result) != 0:
                 row = result[0]
                 job_template_info = {'sch_job_template_id': row[0],
-                'instance_name_suffix': row[1],
-                'parameter_name': row[2],
-                'delete_after_completion': row[3],
-                'source_runtime_parameters': row[4],
-                'destination_runtime_parameters': row[5],
-                'source_connection_info': row[6],
-                'destination_connection_info': row[7]
+                'delete_after_completion': row[1],
+                'source_runtime_parameters': row[2],
+                'destination_runtime_parameters': row[3],
+                'source_connection_info': row[4],
+                'destination_connection_info': row[5]
             }
                 return job_template_info
             else:

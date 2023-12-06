@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 def validate_request_string_arg(payload, key):
     if not (key in payload.keys() and isinstance(payload[key], str) and len(payload[key]) > 0):
-        message = 'Bad value for \'{}}\' arg'.format(key)
+        message = 'Bad value for \'{}\' arg'.format(key)
         logger.error(message)
         raise Exception(message)
 
