@@ -3,7 +3,7 @@ create user streamsets with password 'streamsets';
 create schema streamsets authorization streamsets;
 
 create table streamsets.job_template(
-  job_template_id                     int                  not null primary key,
+  job_template_id                     int  primary key generated always as identity,
   sch_job_template_id                 character varying    not null,
   delete_after_completion             boolean              not null,
   source_runtime_parameters           jsonb,
@@ -17,18 +17,18 @@ grant all on streamsets.job_template to streamsets;
 
 
 create table streamsets.ingestion_pattern(
-  ingestion_pattern_id              int                  not null primary key,
+  ingestion_pattern_id              int                  primary key generated always as identity,
   pattern_name                      character varying    not null,
   source                            character varying    not null,
   destination                       character varying    not null,
   create_timestamp                  timestamp            not null
-);  
+);
 
 grant all on streamsets.ingestion_pattern to streamsets;
 
 
 create table streamsets.ingestion_pattern_job_template_relationship(
-  rel_id                            int                  not null primary key,
+  rel_id                            int                  primary key generated always as identity,
   ingestion_pattern_id              int                  not null,
   job_template_id                   int                  not null,
   schedule                          character varying,
@@ -44,7 +44,7 @@ grant all on streamsets.ingestion_pattern_job_template_relationship to streamset
 
 
 create table streamsets.job_instance (
-  job_instance_id           int not null primary key,
+  job_instance_id           int  primary key generated always as identity,
   job_run_id                int not null,
   job_template_id           int not null,
   user_id                   character varying    not null,
@@ -56,9 +56,9 @@ create table streamsets.job_instance (
   error_record_count        int,
   error_message             character varying,
   start_time                timestamp,
-  finish_time                timestamp,
+  finish_time               timestamp,
   CONSTRAINT job_template_id
-      FOREIGN KEY(job_template_id) 
+      FOREIGN KEY(job_template_id)
     REFERENCES streamsets.job_template(job_template_id)
 );
 
@@ -67,16 +67,14 @@ grant all on streamsets.job_instance to streamsets;
 
 
 insert into streamsets.ingestion_pattern (
-  ingestion_pattern_id,
   pattern_name,
   source,
   destination,
   create_timestamp
 )
- values(1000, 'http-to-gcs', 'http','gcs', CURRENT_TIMESTAMP);
+ values('http-to-gcs', 'http','gcs', CURRENT_TIMESTAMP);
 
 insert into streamsets.job_template(
-  job_template_id,
   sch_job_template_id,
   delete_after_completion,
   source_runtime_parameters,
@@ -85,27 +83,28 @@ insert into streamsets.job_template(
   destination_connection_info,
   create_timestamp
   ) values (
-    5000,
     'c09f728a-2a73-4c7e-b735-2512039a9e6b:8030c2e9-1a39-11ec-a5fe-97c8d4369386',
     false,
+    '{"HTTP_MODE": "POLLING"}',
     '{}',
     '{}',
-    '{}',
-    '{}',
+    '{"GCS_CONNECTION" : "9c960db9-7904-47c4-bbc8-4c95dcf9c959:8030c2e9-1a39-11ec-a5fe-97c8d4369386"}',
     CURRENT_TIMESTAMP
 );
 
 
 insert into streamsets.ingestion_pattern_job_template_relationship (
-  rel_id,
   ingestion_pattern_id,
   job_template_id,
   schedule
-) values (
-    100,
-    1000,
-    5000,
-   ''
-);
+) select p.ingestion_pattern_id, t.job_template_id, '{}'
+    from  streamsets.ingestion_pattern p,
+          streamsets.job_template t
+     where p.source =  'http'
+     and p.destination = 'gcs'
+     and t.sch_job_template_id = 'c09f728a-2a73-4c7e-b735-2512039a9e6b:8030c2e9-1a39-11ec-a5fe-97c8d4369386';
+
+
+select * from streamsets.job_template;
 
 

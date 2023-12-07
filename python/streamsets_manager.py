@@ -103,15 +103,15 @@ class StreamSetsManager:
             delete_after_completion=job_template_info['delete_after_completion'])
 
     # Get metrics for all Job Template Instances once they complete
-    def get_metrics(self, user_id, user_run_id, job_template_instances):
+    def get_metrics(self, user_id, user_run_id, job_template_info, job_template_instances):
         for job in job_template_instances:
             # Track each Job Template Instance in a separate thread to avoid blocking
             thread = Thread(target=self.wait_for_job_completion_and_get_metrics,
-                            args=(user_id, user_run_id, job,))
+                            args=(user_id, user_run_id, job_template_info, job,))
             thread.start()
 
     # Waits for Job to complete before getting its metrics
-    def wait_for_job_completion_and_get_metrics(self, user_id, user_run_id, job):
+    def wait_for_job_completion_and_get_metrics(self, user_id, user_run_id, job_template_info, job):
         start_seconds = time()
         elapsed_seconds = 0
         while elapsed_seconds < max_wait_time_for_job_seconds:
@@ -121,10 +121,10 @@ class StreamSetsManager:
                 break
             sleep(job_status_update_seconds)
 
-        self.write_metrics_for_job(user_id, user_run_id, job)
+        self.write_metrics_for_job(user_id, user_run_id, job_template_info, job)
 
     @staticmethod
-    def write_metrics_for_job(user_id, user_run_id, job):
+    def write_metrics_for_job(user_id, user_run_id, job_template_info, job):
 
         metrics_data = {'user_id': user_id, 'user_run_id': user_run_id}
 

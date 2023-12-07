@@ -21,7 +21,7 @@ def run_job_template(request: dict):
         job_template_instances = streamsets.run_job_template(job_template_info, request)
 
         # Get metrics when Job(s) complete
-        streamsets.get_metrics(request['user-id'], request['user-run-id'], job_template_instances)
+        streamsets.get_metrics(request['user-id'], request['user-run-id'], job_template_info, job_template_instances)
 
     except Exception as e:
         logger.error('Error running Job Template' + str(e))
