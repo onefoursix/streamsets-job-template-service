@@ -60,21 +60,21 @@ class DatabaseManager:
             cursor = conn.cursor()
             sql = """
             insert into streamsets.job_instance (
-                job_instance_id           int not null primary key,
-                job_run_id                int not null,
-                job_template_id           int not null,
-                user_id                   character varying    not null,
-                engine_id                 character varying    not null,
-                pipeline_id               character varying    not null,
-                run_status                character varying    not null,
-                input_record_count        int,
-                output_record_count       int,
-                error_record_count        int,
-                error_message             character varying,
-                start_time                timestamp,
-                finish_time               timestamp,
+                user_id,
+                job_run_id,
+                job_template_id,
+               
+                engine_id,
+                pipeline_id,
+                run_status,
+                input_record_count,
+                output_record_count,
+                error_record_count,
+                error_message,
+                start_time,
+                finish_time,
             ) values ( 
-                \'{}\',\'{}\',\'{}\',\'{}\',{},{},\'{}\',{},{},{},\'{}\',\'{}\'
+                \'{}\',               \'{}\',\'{}\',\'{}\',{},     {},{},\'{}\',{},{},{},\'{}\',\'{}\'
             )
             """.format(
                 metrics_data['user_id'],

@@ -48,6 +48,7 @@ create table streamsets.job_instance (
   job_run_id                int not null,
   job_template_id           int not null,
   user_id                   character varying    not null,
+  user_run_id               character varying    not null,
   engine_id                 character varying    not null,
   pipeline_id               character varying    not null,
   run_status                character varying    not null,

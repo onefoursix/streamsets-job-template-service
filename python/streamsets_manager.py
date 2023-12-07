@@ -123,8 +123,8 @@ class StreamSetsManager:
 
         self.write_metrics_for_job(user_id, user_run_id, job_template_info, job)
 
-    @staticmethod
-    def write_metrics_for_job(user_id, user_run_id, job_template_info, job):
+
+    def write_metrics_for_job(self, user_id, user_run_id, job_template_info, job):
 
         metrics_data = {'user_id': user_id, 'user_run_id': user_run_id}
 
@@ -135,8 +135,10 @@ class StreamSetsManager:
         metrics = job.metrics[0]
         history = job.history[0]
 
+        metrics_data['engine_id'] = metrics['sdc.id']
         metrics_data['status'] = status
         metrics_data['job_template_id'] = job.template_job_id
+        metrics_data['job_instance_id'] = 'x'
         metrics_data['job_id'] = job.job_id
         metrics_data['run_number'] = metrics.run_count
         metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
