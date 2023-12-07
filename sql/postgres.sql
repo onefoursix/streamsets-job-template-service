@@ -56,7 +56,7 @@ create table streamsets.job_instance (
   error_record_count        int,
   error_message             character varying,
   start_time                timestamp,
-  finsh_time                timestamp,
+  finish_time                timestamp,
   CONSTRAINT job_template_id
       FOREIGN KEY(job_template_id) 
     REFERENCES streamsets.job_template(job_template_id)
