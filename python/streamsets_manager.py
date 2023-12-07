@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from streamsets.sdk import ControlHub
+import json
 from threading import Thread
 from time import time, sleep
 from datetime import datetime
@@ -29,6 +30,55 @@ class StreamSetsManager:
             credential_id=streamsets_config['cred_id'],
             token=streamsets_config['cred_token'])
 
+    # Get the static parameters defined in the Job Template table
+    def get_static_parameters(self, job_template_info):
+        static_params = {}
+        try:
+            # Source runtime parameters
+            for key in job_template_info['source_runtime_parameters'].keys():
+                static_params[key] = job_template_info['source_runtime_parameters'][key]
+
+            # Destination runtime parameters
+            for key in job_template_info['destination_runtime_parameters'].keys():
+                static_params[key] = job_template_info['destination_runtime_parameters'][key]
+
+            # Source connection info
+            for key in job_template_info['source_connection_info'].keys():
+                static_params[key] = job_template_info['source_connection_info'][key]
+
+            # Destination connection info
+            for key in job_template_info['destination_connection_info'].keys():
+                static_params[key] = job_template_info['destination_connection_info'][key]
+
+        except Exception as e:
+            print('Error getting static parameters: {}'.format(e))
+            raise e
+
+        return static_params
+
+
+    # Club together all the static and dynamic runtime parameters
+    def merge_static_and_dynamic_parameters(self, request, job_template_info):
+
+        # Get the static runtime parameters defined in the template
+        static_params =  self.get_static_parameters(job_template_info)
+
+        # Get the runtime params
+        runtime_params = request['runtime-parameters']
+
+        # Add the static parameters to each dynamic runtime instance's parameter list
+        try:
+            for instance in runtime_params:
+                for key in static_params:
+                    instance[key] = static_params[key]
+        except Exception as e:
+            print('Error merging static and runtime parameters: {}'.format(e))
+            raise e
+        print('Consolidated runtime parameters: {}'.format(runtime_params))
+        return  runtime_params
+
+
+
     # Starts a Job Template and returns a list of Job Template Instances
     def run_job_template(self, job_template_info, request):
 
@@ -36,10 +86,13 @@ class StreamSetsManager:
         job_template_id = job_template_info['sch_job_template_id']
         try:
             job_template = self.sch.jobs.get(job_id=job_template_id)
-            print('Found Job template \'{}\''.format(job_template.job_name))
+            print('Using Job template \'{}\''.format(job_template.job_name))
         except Exception as e:
             logger.error('Error: Job Template with ID \'' + job_template_id+ '\' not found.' + str(e))
             raise
+        # Merge dynamic and static runtime parameters
+        runtime_parameters = self.merge_static_and_dynamic_parameters(request, job_template_info)
+
 
         # Start the Job Template using the runtime parameters in the request
         return self.sch.start_job_template(
