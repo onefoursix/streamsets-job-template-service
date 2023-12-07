@@ -134,11 +134,11 @@ class StreamSetsManager:
 
         metrics = job.metrics[0]
         history = job.history[0]
-
+        pass
 
         metrics_data['job_run_id'] = job.job_id
         metrics_data['job_template_id'] = job_template_info['job_template_id']
-        metrics_data['engine_id'] = metrics['sdc_id']
+        metrics_data['engine_id'] = history['sdc_ids'][0]
         metrics_data['pipeline_id'] = job['pipeline.id']
         metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
 
