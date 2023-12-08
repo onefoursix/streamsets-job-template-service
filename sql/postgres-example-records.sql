@@ -17,7 +17,7 @@ insert into streamsets.job_template(
   ) values (
     'c09f728a-2a73-4c7e-b735-2512039a9e6b:8030c2e9-1a39-11ec-a5fe-97c8d4369386',
     false,
-    '{"HTTP_MODE": "POLLING"}',
+    '{"HTTP_MODE": "POLLING", "HTTP_METHOD": "GET"}',
     '{}',
     '{}',
     '{"GCS_CONNECTION" : "9c960db9-7904-47c4-bbc8-4c95dcf9c959:8030c2e9-1a39-11ec-a5fe-97c8d4369386"}',
