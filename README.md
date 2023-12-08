@@ -48,12 +48,12 @@ Here is an overview of the process:
 
 - Assume we want to create and run an instance of a Job Template named <code>REST API to Google Cloud Storage</code> that expects this set of runtime parameters:
 
-	<img src="images/job-template-params.png" alt="job-template-params" width="300" />
+	<img src="images/job-template-params.png" alt="job-template-params" width="500" />
 	
 	
   We expect the user to pass in values for the <code>HTTP_URL</code>, <code>CITY</code>, <code>GCS_BUCKET</code>, and <code>GCS_FOLDER</code> parameters; with the <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> parameters as static parameters retrieved from the configuration database.
   
-  <img src="images/param-types.png" alt="param-types" width="300" />
+  <img src="images/param-types.png" alt="param-types" width="500" />
 	
   
 
