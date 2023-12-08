@@ -91,7 +91,7 @@ Here is an overview of the process:
 
 
 
-- The Job Template to be run is selected dynamically, based on the <code>source-type</code> and <code>target-type</code>, by the Job Template Runner script.  In this example, the template selection is implemented by looking up the source and target types in the <code>ingestion_pattern</code> table and then selecting the matching Job Template.  See the  <code>get_job_template_info</code> method in the <code>database_manager.py</code> file for details.
+- The Job Template to be run is selected dynamically, based on the <code>source-type</code> and <code>target-type</code>, by the Job Template Runner script.  In this example, the template is selected by looking up the source and target types in the <code>ingestion_pattern</code> table and then selecting the matching Job Template.  See the  <code>get_job_template</code> method in the [database_manager.py](python/database_manager.py) file for details.
 
 - The static Job template parameters <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> are retrieved from the configuration database and added to the dynamic runtime parameters passed in the request
 

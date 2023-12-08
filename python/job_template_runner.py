@@ -15,7 +15,7 @@ def run_job_template(request: dict):
         streamsets = StreamSetsManager()
 
         # Get Job Template Info from the database
-        job_template_info = db.get_job_template_info(request['source-type'], request['target-type'])
+        job_template_info = db.get_job_template(request['source-type'], request['target-type'])
 
         # Start the Job Template
         job_template_instances = streamsets.run_job_template(job_template_info, request)

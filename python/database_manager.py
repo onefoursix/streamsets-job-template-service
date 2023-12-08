@@ -22,7 +22,7 @@ class DatabaseManager:
             password=db_config['password'])
 
     # Gets SCH Job Template ID for source and destination
-    def get_job_template_info(self, source, destination):
+    def get_job_template(self, source, destination):
         conn = None
         try:
             conn = self.get_database_connection()
