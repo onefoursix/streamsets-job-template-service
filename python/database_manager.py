@@ -139,14 +139,11 @@ class DatabaseManager:
                     engine_id,
                     pipeline_id,
                     run_status,
-                    input_record_count,
-                    output_record_count,
-                    error_record_count,
                     error_message,
-                    start_time,
+                    start_time
 
                 ) values ( 
-                    \'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\'
+                     \'{}\',{},\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\'
                 )
                 """.format(
                 metrics_data['job_run_id'],
