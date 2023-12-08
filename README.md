@@ -1,5 +1,5 @@
 ## streamsets-job-template-service
-This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to start Job Template instances based on runtime parameters passed in an API request, with additional configuration retrieved from a  database table. After Jobs complete, Job metrics are captured and written back to the database. A REST API service wrapper is provided for integration flexibility.
+This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to start Job Template instances based on runtime parameters passed in an API request, with additional configuration retrieved from a configuration database. After Jobs complete, Job metrics are captured and written back to the database. A REST API service wrapper is provided for integration flexibility.
 In this version, Jobs are assumed to be batch Jobs and metrics are gathered after the Jobs complete. One could enhance this project to capture metrics for streaming Jobs as well.
 
 ## Overview
@@ -8,10 +8,10 @@ Here is an overview of the process:
 
 - A Data Analyst submits a request to run a Job to an app that makes REST API calls to the Job-Template-Service, or a scheduler like Apache Airflow uses Python bindings to directly call the Python Job Template Runner script.
 
-- The Job Template that is run is dynamically selected based on rules applied to the request's <code>source-type</code> and  <code>target-type</code>
+- The Job Template that is run is dynamically selected based on rules applied to the request's <code>source-type</code> and  <code>target-type</code> values.
 
 
-- A subset of the Job's runtime parameters are passed in by the caller as part of the request, which we can consider as "dynamic" runtime parameters, and additional pipeline and connection parameters are retrieved from the configuration store, which we can consider as "static" runtime parameters".
+- A subset of the Job's runtime parameters are passed in by the caller as part of the request, which we can consider as "dynamic" runtime parameters, and additional pipeline and connection parameters are retrieved from the configuration store, which we can consider as "static" runtime parameters.
 
 
 - A Python application built using the StreamSets SDK selects the appropriate Job Template and retrieves the Job Template configuration and static parameters from a set of database tables.
@@ -45,7 +45,7 @@ Here is an overview of the process:
 	<img src="images/job-template-params.png" alt="job-template-params" width="300" />
 	
 	
-  We may expect the user to pass in values for the <code>HTTP_URL</code>, <code>CITY</code>, <code>GCS_BUCKET</code>, and <code>GCS_FOLDER</code> parameters; with the <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> parameters considered as static parameters with values to be retrieved from the configuration store.
+  We expect the user to pass in values for the <code>HTTP_URL</code>, <code>CITY</code>, <code>GCS_BUCKET</code>, and <code>GCS_FOLDER</code> parameters; with the <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> parameters as static parameters retrieved from the configuration database.
   
 
 - The Job Template Service API would be called with a POST request to the endpoint <code>/streamsets/job-template-runner</code> with a JSON payload that passes in the following args:
