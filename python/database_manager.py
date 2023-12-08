@@ -21,7 +21,56 @@ class DatabaseManager:
             user=db_config['user'],
             password=db_config['password'])
 
+    # Gets SCH Job Template ID for source and destination
+    def get_job_template_info(self, source, destination):
+        conn = None
+        try:
+            conn = self.get_database_connection()
+            cursor = conn.cursor()
+            sql = """
+           select t.job_template_id, 
+                  t.sch_job_template_id,
+                  t.delete_after_completion,
+                  t.source_runtime_parameters,
+                  t.destination_runtime_parameters,
+                  t.source_connection_info,
+                  t.destination_connection_info 
+             from streamsets.job_template t, 
+                streamsets.ingestion_pattern_job_template_relationship r,
+                streamsets.ingestion_pattern p
+             where p.source = '{}'
+                and p.destination = '{}'
+                and p.ingestion_pattern_id = r.ingestion_pattern_id
+                and t.job_template_id = r.job_template_id
+            """.format(source, destination).replace('\n', '')
+            print(sql)
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            if result is not None and len(result) != 0:
+                row = result[0]
+                job_template_info = {
+                    'job_template_id': row[0],
+                    'sch_job_template_id': row[1],
+                    'delete_after_completion': row[2],
+                    'source_runtime_parameters': row[3],
+                    'destination_runtime_parameters': row[4],
+                    'source_connection_info': row[5],
+                    'destination_connection_info': row[6]
+                }
+                return job_template_info
+            else:
+                print('Error: No  job_template record found for source \'{}\' and destination \'{}\'', format(source, destination))
+            return None
 
+        except Exception as e:
+            logger.error("Error reading job_template from Postgres " + str(e))
+
+        finally:
+            try:
+                conn.close()
+            except:
+            # Swallow any exceptions closing the connection
+                pass
 
     # Inserts a successful Job Metrics record into the database
     def write_job_metrics_record(self, metrics_data):
@@ -115,53 +164,3 @@ class DatabaseManager:
 
 
 
-    # Gets SCH Job Template ID for source and destination
-    def get_job_template_info (self, source, destination):
-        conn = None
-        try:
-            conn = self.get_database_connection()
-            cursor = conn.cursor()
-            sql = """
-           select t.job_template_id, 
-                  t.sch_job_template_id,
-                  t.delete_after_completion,
-                  t.source_runtime_parameters,
-                  t.destination_runtime_parameters,
-                  t.source_connection_info,
-                  t.destination_connection_info 
-             from streamsets.job_template t, 
-                streamsets.ingestion_pattern_job_template_relationship r,
-                streamsets.ingestion_pattern p
-             where p.source = '{}'
-                and p.destination = '{}'
-                and p.ingestion_pattern_id = r.ingestion_pattern_id
-                and t.job_template_id = r.job_template_id
-            """.format(source, destination).replace('\n', '')
-            print(sql)
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            if result is not None and len(result) != 0:
-                row = result[0]
-                job_template_info = {
-                    'job_template_id': row[0],
-                    'sch_job_template_id': row[1],
-                    'delete_after_completion': row[2],
-                    'source_runtime_parameters': row[3],
-                    'destination_runtime_parameters': row[4],
-                    'source_connection_info': row[5],
-                    'destination_connection_info': row[6]
-                }
-                return job_template_info
-            else:
-                print('Error: No  job_template record found for source \'{}\' and destination \'{}\'',format(source, destination))
-            return None
-
-        except Exception as e:
-            logger.error("Error reading job_template from Postgres " + str(e))
-
-        finally:
-            try:
-                conn.close()
-            except:
-                # Swallow any exceptions closing the connection
-                pass
