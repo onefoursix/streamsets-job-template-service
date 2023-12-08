@@ -93,7 +93,6 @@ Here is an overview of the process:
 
 - The Job Template to be run is selected dynamically, based on the <code>source-type</code> and <code>target-type</code>, by the Job Template Runner script.  In this example, the template is selected by looking up the source and target types in the <code>ingestion_pattern</code> table and then selecting the matching Job Template.  See the  <code>get_job_template</code> method in the [database_manager.py](python/database_manager.py) file for details.
 
-- The static Job template parameters <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> are retrieved from the configuration database and added to the dynamic runtime parameters passed in the request
 
 - The REST API endpoint calls the  <code>run_job_template</code> method in the file [job_template_runner.py](python/job_template_runner.py)
 
@@ -159,7 +158,7 @@ insert into streamsets.ingestion_pattern (
 
 </BR>
 
-- Insert a record into the <code>job_template</code> table like this that includes the StreamSets Job Template ID, as well as the static parameters for the source, and a StreamSets Connection ID for the target:
+- Insert a record into the <code>job_template</code> table similar that includes the StreamSets Job Template ID, as well as any static parameters and connections for the source and destination.  For example, for the <code>REST API to Google Cloud Storage</code> Job Template I will insert this record:
 
 ```
 insert into streamsets.job_template(
