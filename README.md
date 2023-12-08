@@ -1,24 +1,30 @@
 ## streamsets-job-template-service
-This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to start Job Template instances based on runtime parameters passed in an API request, with additional configuration retrieved from a configuration database. After Jobs complete, Job metrics are captured and written back to the database. A REST API service wrapper is provided for integration flexibility.
+This project provides an example of how to use the [StreamSets Platform SDK](https://docs.streamsets.com/platform-sdk/latest/index.html) to start Job Template instances based on runtime parameters passed in an API request, with additional parameter values retrieved from a configuration database. After Jobs complete, Job metrics are captured and written to the database. 
+
+A REST API service wrapper is provided for integration flexibility.
 In this version, Jobs are assumed to be batch Jobs and metrics are gathered after the Jobs complete. One could enhance this project to capture metrics for streaming Jobs as well.
 
 ## Overview
 
 Here is an overview of the process:
 
-- A Data Analyst submits a request to run a Job to an app that makes REST API calls to the Job-Template-Service, or a scheduler like Apache Airflow uses Python bindings to directly call the Python Job Template Runner script.
+- There are many scenarios where a StreamSets Job could be launched using this Job Template Service. For example:
+  - An Analyst could click a button in a custom UI (not provided here) that makes REST API calls to the Job-Template-Service to launch a Job.
 
-- The Job Template that is run is dynamically selected based on rules applied to the request's <code>source-type</code> and  <code>target-type</code> values.
+  - A GitHub Action or other CI/CD automation systems could start a Job using REST API calls to the Job-Template-Service. 
+  
+  - Schedulers like Apache Airflow or other applications with Python bindings could directly call the Python Job Template Runner script.
+  
+- A subset of the Job's runtime parameters will be passed in by the caller, which we refer to as the "dynamic" runtime parameters, with additional pipeline and connection parameters retrieved from a configuration store, which we refer to as "static" runtime parameters.
 
 
-- A subset of the Job's runtime parameters are passed in by the caller as part of the request, which we can consider as "dynamic" runtime parameters, and additional pipeline and connection parameters are retrieved from the configuration store, which we can consider as "static" runtime parameters.
+- The configuration store used in this example is a Postgres database.
 
+- The service will dynamically select the Job Template to be launched based on rules applied to the request's <code>source-type</code> and  <code>target-type</code> values.
 
-- A Python application built using the StreamSets SDK selects the appropriate Job Template and retrieves the Job Template configuration and static parameters from a set of database tables.
+- The service creates and starts Job Template Instance(s) that StreamSets Control Hub schedules on engines.
 
-- The Python Application creates and starts Job Template Instance(s) that StreamSets Control Hub schedules on engines.
-
-- The Python Application spawns a new thread per Job Template Instance, and each thread waits until its instance completes, then gathers the instance metrics and inserts the metrics into a database table
+- The service spawns a new thread for each Job Template Instance, and each thread waits until its instance completes, then gathers the instance metrics and inserts the metrics into a database table.
 
 <img src="images/overview.png" alt="overview" width="700" />
 
