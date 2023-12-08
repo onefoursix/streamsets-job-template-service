@@ -145,7 +145,7 @@ class StreamSetsManager:
         # If the Job did not complete successfully
         if status != 'INACTIVE':
             metrics_data['run_status'] = False
-            DatabaseManager().write_failed_job_metrics_record(metrics_data)
+            DatabaseManager().write_unsuccessful_job_metrics_record(metrics_data)
 
         # If the Job completed successfully
         else:
@@ -154,4 +154,4 @@ class StreamSetsManager:
             metrics_data['output_record_count'] = metrics.output_count
             metrics_data['error_record_count'] = metrics.total_error_count
             metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
-            DatabaseManager().write_job_metrics_record(metrics_data)
+            DatabaseManager().write_successful_job_metrics_record(metrics_data)
