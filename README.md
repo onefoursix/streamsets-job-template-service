@@ -86,7 +86,7 @@ Here is an overview of the process:
           }'
 ```
 
-- You can use any arbitrary non-empty string value for the <code>user-run-id</code>.  That value can be used subsequently to correlate the Job metrics records for Jobs associated with the run.
+- One can use any arbitrary string value for the <code>user-run-id</code>, which can be used subsequently to identify the Job metrics associated with the run.
 
 
 
