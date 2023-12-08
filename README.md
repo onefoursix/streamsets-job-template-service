@@ -158,7 +158,7 @@ insert into streamsets.ingestion_pattern (
 
 </BR>
 
-- Insert a record into the <code>job_template</code> table similar that includes the StreamSets Job Template ID, as well as any static parameters and connections for the source and destination.  For example, for the <code>REST API to Google Cloud Storage</code> Job Template I will insert this record:
+- Insert a record into the <code>job_template</code> table that includes the StreamSets Job Template ID, as well as any static parameters and connections for the source and destination.  For example, for the <code>REST API to Google Cloud Storage</code> Job Template I will insert this record:
 
 ```
 insert into streamsets.job_template(
