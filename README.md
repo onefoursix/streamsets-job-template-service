@@ -53,6 +53,9 @@ Here is an overview of the process:
 	
   We expect the user to pass in values for the <code>HTTP_URL</code>, <code>CITY</code>, <code>GCS_BUCKET</code>, and <code>GCS_FOLDER</code> parameters; with the <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> parameters as static parameters retrieved from the configuration database.
   
+  <img src="images/param-types.png" alt="param-types" width="300" />
+	
+  
 
 - The Job Template Service API would be called with a POST request to the endpoint <code>/streamsets/job-template-runner</code> with a JSON payload that passes in the following args:
 
