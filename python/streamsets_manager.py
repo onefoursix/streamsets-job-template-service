@@ -1,6 +1,5 @@
 from configparser import ConfigParser
 from streamsets.sdk import ControlHub
-import json
 from threading import Thread
 from time import time, sleep
 from datetime import datetime
@@ -126,32 +125,32 @@ class StreamSetsManager:
 
     def write_metrics_for_job(self, user_id, user_run_id, job_template_info, job):
 
-        metrics_data = {'user_id': user_id, 'user_run_id': user_run_id}
-
+        metrics_data = {}
         job.refresh()
-
-        status = job.status.status
-
         metrics = job.metrics[0]
         history = job.history[0]
 
+        # If job status color is RED, don't consider the Job as successful
+        if job.status.status == 'INACTIVE' and history.color == 'GRAY':
+            metrics_data['successful_run'] = True
+        else:
+            metrics_data['successful_run'] = False
+
+        if history.error_message is None:
+            metrics_data['error_message'] = ''
+        else:
+            metrics_data['error_message'] = history.error_message
+
+        metrics_data['user_id'] = user_id
+        metrics_data['user_run_id'] = user_run_id
         metrics_data['job_run_id'] = job.job_id
         metrics_data['job_template_id'] = job_template_info['job_template_id']
         metrics_data['engine_id'] = metrics.sdc_id
         metrics_data['pipeline_id'] = job.pipeline_id
+        metrics_data['input_record_count'] = metrics.input_count
+        metrics_data['output_record_count'] = metrics.output_count
+        metrics_data['error_record_count'] = metrics.total_error_count
         metrics_data['start_time'] = datetime.fromtimestamp(history.start_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
-        metrics_data['error_message'] = history.error_message
+        metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
 
-        # If the Job did not complete successfully
-        if status != 'INACTIVE':
-            metrics_data['run_status'] = False
-            DatabaseManager().write_unsuccessful_job_metrics_record(metrics_data)
-
-        # If the Job completed successfully
-        else:
-            metrics_data['run_status'] = True
-            metrics_data['input_record_count'] = metrics.input_count
-            metrics_data['output_record_count'] = metrics.output_count
-            metrics_data['error_record_count'] = metrics.total_error_count
-            metrics_data['finish_time'] = datetime.fromtimestamp(history.finish_time / 1000.0).strftime("%Y-%m-%d %H:%M:%S")
-            DatabaseManager().write_successful_job_metrics_record(metrics_data)
+        DatabaseManager().write_job_metrics(metrics_data)

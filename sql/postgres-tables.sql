@@ -51,7 +51,7 @@ create table streamsets.job_instance (
   user_run_id               character varying    not null,
   engine_id                 character varying    not null,
   pipeline_id               character varying    not null,
-  run_status                character varying    not null,
+  successful_run            boolean    not null,
   input_record_count        int,
   output_record_count       int,
   error_record_count        int,

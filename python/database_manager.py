@@ -73,10 +73,8 @@ class DatabaseManager:
                 pass
 
     # Inserts a successful Job Metrics record into the database
-    def write_successful_job_metrics_record(self, metrics_data):
+    def write_job_metrics(self, metrics_data):
         conn = None
-        #
-
         try:
             conn = self.get_database_connection()
             cursor = conn.cursor()
@@ -88,7 +86,7 @@ class DatabaseManager:
                 user_run_id,
                 engine_id,
                 pipeline_id,
-                run_status,
+                successful_run,
                 input_record_count,
                 output_record_count,
                 error_record_count,
@@ -105,7 +103,7 @@ class DatabaseManager:
                 metrics_data['user_run_id'],
                 metrics_data['engine_id'],
                 metrics_data['pipeline_id'],
-                metrics_data['run_status'],
+                metrics_data['successful_run'],
                 metrics_data['input_record_count'],
                 metrics_data['output_record_count'],
                 metrics_data['error_record_count'],
@@ -125,46 +123,7 @@ class DatabaseManager:
 
     # Inserts a failed Job run record into the database
 
-    def write_unsuccessful_job_metrics_record(self, metrics_data):
-        conn = None
-        try:
-            conn = self.get_database_connection()
-            cursor = conn.cursor()
-            sql = """
-                insert into streamsets.job_instance (
-                    job_run_id,
-                    job_template_id,
-                    user_id,
-                    user_run_id,
-                    engine_id,
-                    pipeline_id,
-                    run_status,
-                    error_message,
-                    start_time
 
-                ) values ( 
-                     \'{}\',{},\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\'
-                )
-                """.format(
-                metrics_data['job_run_id'],
-                metrics_data['job_template_id'],
-                metrics_data['user_id'],
-                metrics_data['user_run_id'],
-                metrics_data['engine_id'],
-                metrics_data['pipeline_id'],
-                metrics_data['run_status'],
-                metrics_data['error_message'],
-                metrics_data['start_time'],
-            )
-            cursor.execute(sql)
-            conn.commit()
-        except Exception as e:
-            logger.error("Error writing job_run_metrics to Postgres " + str(e))
-        finally:
-            try:
-                conn.close()
-            except:
-                pass
 
 
 
