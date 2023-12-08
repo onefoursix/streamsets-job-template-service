@@ -51,7 +51,7 @@ Here is an overview of the process:
 	<img src="images/job-template-params.png" alt="job-template-params" width="500" />
 	
 	
-  In this case, we expect the user to pass in values for the <code>HTTP_URL</code>, <code>CITY</code>, <code>GCS_BUCKET</code>, and <code>GCS_FOLDER</code> parameters; with the <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> parameters as static parameters retrieved from the configuration database.
+  In this case, we expect the user to pass in values for the <code>HTTP_URL</code>, <code>CITY</code>, <code>GCS_BUCKET</code>, and <code>GCS_FOLDER</code> parameters; with the static parameters <code>HTTP_METHOD</code>, <code>HTTP_MODE</code>, and <code>GCS_CONNECTION</code> retrieved from the configuration database.
   
   <img src="images/param-types.png" alt="param-types" width="500" />
 	
