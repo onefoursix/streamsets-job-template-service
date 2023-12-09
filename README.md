@@ -141,7 +141,6 @@ cred_token=<YOUR CRED TOKEN>
 <BR/>
 
 - Insert a record into the <code>ingestion_pattern</code> table to map a source and target types to a pattern name. For example, the entry for my <code>REST API to Google Cloud Storage</code> Job Template looks like this:
-<BR/>
 
 
 ```
