@@ -198,7 +198,7 @@ insert into streamsets.ingestion_pattern_job_template_relationship (
 
 <BR/>
 
-- Edit the value set in this line in the file <code>python/job_template_service.py</code> to specify where the application's log will be written to.  All modules share this log so for example, if there are permissions issues writing to the database tables, error messages should appear in this log:
+- Edit the value set in this line in the file <code>python/job_template_service.py</code> to specify where the application's log will be written to.  All modules share this log so, for example, if there are permissions issues writing to the database tables, error messages should appear in this log:
 
     <code>log_file = '/tmp/streamsets-job-template-service.log'</code>
 
@@ -213,7 +213,7 @@ insert into streamsets.ingestion_pattern_job_template_relationship (
 - The Service's port number is currently hardcoded to port <code>8888</code> in the file <code>job_template_service.py</code>; feel free to change that.	
 	
 ## Start the service
-Change to the project's <code>python</code> directory, and start the service in the foreground in its own terminal session using a command like this:
+To easily test the service, change to the project's <code>python</code> directory, and start the service in the foreground in its own terminal session using a command like this:
 
     $ python job_template_service.py
 
