@@ -273,7 +273,7 @@ If all goes well, the service should return an <code>OK</code> status:
 	
 ## Confirm the Job Template Instances are Running
 
-You should see your Job Template Instances are running:
+You should see two Job Template Instances are running:
 
 <img src="images/instances.png" alt="instances" width="700" />
 
@@ -283,7 +283,7 @@ Look at each instance's details page in Control Hub to confirm the full set of r
 <img src="images/instance-params.png" alt="instanceparams" width="700" />
 
 
-Once the instances complete, you should see their metrics in the <code>streamsets.job_run_metrics</code> table:
+Once the instances complete, you should see their metrics in the <code>streamsets.job_run_metrics</code> table.  I'll force quit one of the Job instances to confirm the service distinguishes between instances that terminate normally and those that do not:
 
 
 <code>SQL> select * from streamsets.job_run_metrics;</code>
