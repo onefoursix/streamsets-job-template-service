@@ -233,7 +233,7 @@ Tail the app's log to see messages, like this:
 
 ## Call the Service using the REST API
 
-In a new terminal session, call the service like this, referencing a <code>user-id</code>, <code>user-run-id</code>, <code>source-type</code>, <code>target-type</code> and any needed runtime parameters.  For example, I'll launch two instances of the <code>REST API to Google Cloud Storage</code> Job Template, by including two sets of runtime parameters, like this:
+In a new terminal session, call the service like this, referencing a <code>user-id</code>, <code>user-run-id</code>, <code>source-type</code>, <code>target-type</code> and any needed runtime parameters.  For example, I'll launch two instances of the <code>REST API to Google Cloud Storage</code> Job Template by including two sets of runtime parameters, like this:
 
 ```
     $ curl -X POST \
@@ -262,10 +262,6 @@ In a new terminal session, call the service like this, referencing a <code>user-
 
 ```
 
-
-In this case, this config will launch two Job Template Instances.
-
-The application will select the template named <code>http-to-gcs</code> based on the source-type and target-type values.
 
 If all goes well, the service should return an <code>OK</code> status:
 
