@@ -31,24 +31,24 @@ class StreamSetsManager:
             token=streamsets_config['cred_token'])
 
     # Get the static parameters defined in the Job Template table
-    def get_static_parameters(self, job_template_info):
+    def get_static_parameters(self, job_template):
         static_params = {}
         try:
             # Source runtime parameters
-            for key in job_template_info['source_runtime_parameters'].keys():
-                static_params[key] = job_template_info['source_runtime_parameters'][key]
+            for key in job_template['source_runtime_parameters'].keys():
+                static_params[key] = job_template['source_runtime_parameters'][key]
 
             # Destination runtime parameters
-            for key in job_template_info['destination_runtime_parameters'].keys():
-                static_params[key] = job_template_info['destination_runtime_parameters'][key]
+            for key in job_template['destination_runtime_parameters'].keys():
+                static_params[key] = job_template['destination_runtime_parameters'][key]
 
             # Source connection info
-            for key in job_template_info['source_connection_info'].keys():
-                static_params[key] = job_template_info['source_connection_info'][key]
+            for key in job_template['source_connection_info'].keys():
+                static_params[key] = job_template['source_connection_info'][key]
 
             # Destination connection info
-            for key in job_template_info['destination_connection_info'].keys():
-                static_params[key] = job_template_info['destination_connection_info'][key]
+            for key in job_template['destination_connection_info'].keys():
+                static_params[key] = job_template['destination_connection_info'][key]
 
         except Exception as e:
             print('Error getting static parameters: {}'.format(e))
@@ -57,10 +57,10 @@ class StreamSetsManager:
         return static_params
 
     # Club together all the static and dynamic runtime parameters
-    def merge_static_and_dynamic_parameters(self, request, job_template_info):
+    def merge_static_and_dynamic_parameters(self, request, job_template):
 
         # Get the static runtime parameters defined in the template
-        static_params = self.get_static_parameters(job_template_info)
+        static_params = self.get_static_parameters(job_template)
 
         # Get the runtime params
         runtime_params = request['runtime-parameters']
@@ -82,8 +82,8 @@ class StreamSetsManager:
         # Find the Job Template
         job_template_id = job_template['sch_job_template_id']
         try:
-            job_template = self.sch.jobs.get(job_id=job_template_id)
-            print('Using Job template \'{}\''.format(job_template.job_name))
+            sch_job_template = self.sch.jobs.get(job_id=job_template_id)
+            print('Using Job template \'{}\''.format(sch_job_template.job_name))
         except Exception as e:
             logger.error('Error: Job Template with ID \'' + job_template_id + '\' not found.' + str(e))
             raise
@@ -92,22 +92,22 @@ class StreamSetsManager:
 
         # Start the Job Template using the runtime parameters in the request
         return self.sch.start_job_template(
-            job_template,
+            sch_job_template,
             runtime_parameters=runtime_parameters,
             instance_name_suffix='TIME_STAMP',
             attach_to_template=True,
             delete_after_completion=job_template['delete_after_completion'])
 
     # Get metrics for all Job Template Instances once they complete
-    def get_metrics(self, user_id, user_run_id, job_template_info, job_template_instances):
+    def get_metrics(self, user_id, user_run_id, job_template, job_template_instances):
         for job in job_template_instances:
             # Track each Job Template Instance in a separate thread to avoid blocking
             thread = Thread(target=self.wait_for_job_completion_and_get_metrics,
-                            args=(user_id, user_run_id, job_template_info, job,))
+                            args=(user_id, user_run_id, job_template, job,))
             thread.start()
 
     # Waits for Job to complete before getting its metrics
-    def wait_for_job_completion_and_get_metrics(self, user_id, user_run_id, job_template_info, job):
+    def wait_for_job_completion_and_get_metrics(self, user_id, user_run_id, job_template, job):
         start_seconds = time()
         elapsed_seconds = 0
         while elapsed_seconds < max_wait_time_for_job_seconds:
@@ -117,7 +117,7 @@ class StreamSetsManager:
                 break
             sleep(job_status_update_seconds)
 
-        self.write_metrics_for_job(user_id, user_run_id, job_template_info, job)
+        self.write_metrics_for_job(user_id, user_run_id, job_template, job)
 
     def write_metrics_for_job(self, user_id, user_run_id, job_template_info, job):
 
