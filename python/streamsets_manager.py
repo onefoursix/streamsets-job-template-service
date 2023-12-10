@@ -16,6 +16,7 @@ job_status_update_seconds = 10
 max_wait_time_for_job_seconds = 4 * 60 * 60  # four hours
 
 
+# noinspection PyMethodMayBeStatic
 class StreamSetsManager:
     def __init__(self):
         # Read streamsets connection properties from ../streamsets.ini file
@@ -55,12 +56,11 @@ class StreamSetsManager:
 
         return static_params
 
-
     # Club together all the static and dynamic runtime parameters
     def merge_static_and_dynamic_parameters(self, request, job_template_info):
 
         # Get the static runtime parameters defined in the template
-        static_params =  self.get_static_parameters(job_template_info)
+        static_params = self.get_static_parameters(job_template_info)
 
         # Get the runtime params
         runtime_params = request['runtime-parameters']
@@ -74,32 +74,29 @@ class StreamSetsManager:
             print('Error merging static and runtime parameters: {}'.format(e))
             raise e
         print('Consolidated runtime parameters: {}'.format(runtime_params))
-        return  runtime_params
-
-
+        return runtime_params
 
     # Starts a Job Template and returns a list of Job Template Instances
-    def run_job_template(self, job_template_info, request):
+    def run_job_template(self, job_template, request):
 
         # Find the Job Template
-        job_template_id = job_template_info['sch_job_template_id']
+        job_template_id = job_template['sch_job_template_id']
         try:
             job_template = self.sch.jobs.get(job_id=job_template_id)
             print('Using Job template \'{}\''.format(job_template.job_name))
         except Exception as e:
-            logger.error('Error: Job Template with ID \'' + job_template_id+ '\' not found.' + str(e))
+            logger.error('Error: Job Template with ID \'' + job_template_id + '\' not found.' + str(e))
             raise
         # Merge dynamic and static runtime parameters
-        runtime_parameters = self.merge_static_and_dynamic_parameters(request, job_template_info)
-
+        runtime_parameters = self.merge_static_and_dynamic_parameters(request, job_template)
 
         # Start the Job Template using the runtime parameters in the request
         return self.sch.start_job_template(
             job_template,
-            runtime_parameters=request['runtime-parameters'],
+            runtime_parameters=runtime_parameters,
             instance_name_suffix='TIME_STAMP',
-            attach_to_template=True, #job_template_info['attach_to_template'],
-            delete_after_completion=job_template_info['delete_after_completion'])
+            attach_to_template=True,
+            delete_after_completion=job_template['delete_after_completion'])
 
     # Get metrics for all Job Template Instances once they complete
     def get_metrics(self, user_id, user_run_id, job_template_info, job_template_instances):
@@ -121,7 +118,6 @@ class StreamSetsManager:
             sleep(job_status_update_seconds)
 
         self.write_metrics_for_job(user_id, user_run_id, job_template_info, job)
-
 
     def write_metrics_for_job(self, user_id, user_run_id, job_template_info, job):
 
