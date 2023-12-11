@@ -35,6 +35,3 @@ insert into streamsets.ingestion_pattern_job_template_relationship (
      where p.source =  'http'
      and p.destination = 'gcs'
      and t.sch_job_template_id = 'c09f728a-2a73-4c7e-b735-2512039a9e6b:8030c2e9-1a39-11ec-a5fe-97c8d4369386';
-
-
-

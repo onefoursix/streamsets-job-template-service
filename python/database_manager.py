@@ -4,6 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class DatabaseManager:
     def __init__(self):
         # Read database connection properties from ../database.ini file
@@ -34,7 +35,7 @@ class DatabaseManager:
                   t.source_runtime_parameters,
                   t.destination_runtime_parameters,
                   t.source_connection_info,
-                  t.destination_connection_info 
+                  t.destination_connection_info
              from streamsets.job_template t, 
                 streamsets.ingestion_pattern_job_template_relationship r,
                 streamsets.ingestion_pattern p
@@ -69,7 +70,7 @@ class DatabaseManager:
             try:
                 conn.close()
             except:
-            # Swallow any exceptions closing the connection
+                # Swallow any exceptions closing the connection
                 pass
 
     # Inserts a successful Job Metrics record into the database
@@ -120,11 +121,3 @@ class DatabaseManager:
                 conn.close()
             except:
                 pass
-
-    # Inserts a failed Job run record into the database
-
-
-
-
-
-

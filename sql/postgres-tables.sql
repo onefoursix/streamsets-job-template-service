@@ -64,8 +64,3 @@ create table streamsets.job_instance (
 );
 
 grant all on streamsets.job_instance to streamsets;
-
-
-
-
-
